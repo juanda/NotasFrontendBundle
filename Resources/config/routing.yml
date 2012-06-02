@@ -1,0 +1,86 @@
+Jjamn_homepage:
+     pattern:  /
+     defaults: { _controller: JAMNotasFrontendBundle:Notas:index }
+     requirements:
+       _method: GET
+
+jamn_conetiqueta:
+     pattern:  /conetiqueta/{etiqueta}
+     defaults: { _controller: JAMNotasFrontendBundle:Notas:index }
+     requirements:
+         id:  \d+
+         _method: GET
+
+jamn_buscar:
+     pattern:  /buscar
+     defaults: { _controller: JAMNotasFrontendBundle:Notas:index, etiqueta: termino }
+     requirements:
+       _method: POST
+
+jamn_nota:
+     pattern:  /nota/{id}
+     defaults: { _controller: JAMNotasFrontendBundle:Notas:index }
+     requirements:
+         id:  \d+
+         _method: GET
+
+jamn_nueva:
+     pattern:  /nueva
+     defaults: { _controller: JAMNotasFrontendBundle:Notas:nueva }
+
+jamn_editar:
+     pattern:  /editar/{id}
+     defaults: { _controller: JAMNotasFrontendBundle:Notas:editar }
+     requirements:
+       id:  \d+
+
+jamn_borrar:
+     pattern:  /borrar/{id}
+     defaults: { _controller: JAMNotasFrontendBundle:Notas:borrar }
+     requirements:
+       id:  \d+
+
+jamn_espacio_premium:
+     pattern: /miespacio
+     defaults: { _controller: JAMNotasFrontendBundle:Notas:espacioPremium }
+
+jamn_rss:
+     pattern:  /rss
+     defaults: { _controller: JAMNotasFrontendBundle:Notas:rss }
+     requirements:
+       _method: GET
+       _format: xml
+
+jamn_registro:
+     pattern:  /registro
+     defaults: { _controller: JAMNotasFrontendBundle:Registro:registro }
+
+jamn_activar_cuenta:
+     pattern:  /activar/{token}
+     defaults: { _controller: JAMNotasFrontendBundle:Registro:activar }
+
+jamn_tarifas:
+     pattern:  /tarifas
+     defaults: { _controller: JAMNotasFrontendBundle:Contratos:tarifasPremium }
+     requirements:
+       _method: GET
+
+jamn_contratar:
+     pattern:  /contratar
+     defaults: { _controller: JAMNotasFrontendBundle:Contratos:contratarPremium }
+     
+jamn_ORM_crear:
+ pattern:  /estudio_orm/crear
+ defaults: { _controller: JAMNotasFrontendBundle:EstudioORM:crear }
+
+jamn_ORM_recuperar:
+ pattern:  /estudio_orm/recuperar/{id}
+ defaults: { _controller: JAMNotasFrontendBundle:EstudioORM:recuperar }
+
+jamn_ORM_recuperar_notas:
+    pattern:  /estudio_orm/recuperar_notas
+    defaults: { _controller: JAMNotasFrontendBundle:EstudioORM:recuperarNotas }
+
+jamn_ORM_recuperar_dql:
+    pattern:  /estudio_orm/dql
+    defaults: { _controller: JAMNotasFrontendBundle:EstudioORM:dql }
