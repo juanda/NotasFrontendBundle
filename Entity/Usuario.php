@@ -5,6 +5,8 @@ namespace Jazzyweb\AulasMentor\NotasFrontendBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
  * Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Usuario
@@ -12,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\UsuarioRepository")
  */
-class Usuario
+class Usuario implements AdvancedUserInterface
 {
 
     /**
@@ -386,6 +388,47 @@ class Usuario
     public function getGrupos()
     {
         return $this->grupos;
+    }
+
+    public function eraseCredentials()
+    {
+        
+    }
+
+    function equals(UserInterface $user)
+    {
+        return $user->getUsername() === $this->username;
+    }
+
+    public function getRoles()
+    {
+        $roles = array();
+        foreach ($this->grupos as $g)
+        {
+            $roles[] = $g->getRol();
+        }
+
+        return $roles;
+    }
+
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->getIsActive();
     }
 
 }

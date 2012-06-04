@@ -1,4 +1,14 @@
-Jjamn_homepage:
+jamn_login:
+     pattern: /login
+     defaults: { _controller: JAMNotasFrontendBundle:Login:login }
+
+jamn_login_check:
+     pattern: /login_check
+
+jamn_logout:
+  pattern: /logout
+  
+jamn_homepage:
      pattern:  /
      defaults: { _controller: JAMNotasFrontendBundle:Notas:index }
      requirements:
