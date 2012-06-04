@@ -6,13 +6,13 @@ namespace Jazzyweb\AulasMentor\NotasFrontendBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Usuario;
+use Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Nota;
 use Jazzyweb\AulasMentor\NotasFrontendBundle\Form\Type\UsuarioType;
+use Jazzyweb\AulasMentor\NotasFrontendBundle\Form\Type\NotaType;
 
-class EstudioValidacionYFormularioController extends Controller
-{
+class EstudioValidacionYFormularioController extends Controller {
 
-    public function validaUsuarioAction()
-    {
+    public function validaUsuarioAction() {
         $usuario1 = new Usuario();
 
         // Primero validamos un usuario sin propiedades
@@ -57,8 +57,7 @@ class EstudioValidacionYFormularioController extends Controller
                         'JAMNotasFrontendBundle:EstudioValidacionYFormulario:validaUsuario.html.twig', array('usuarios' => $usuarios));
     }
 
-    public function formUsuarioAction()
-    {
+    public function formUsuarioAction() {
         $request = $this->getRequest();
         $usuario = new Usuario();
 
@@ -68,14 +67,39 @@ class EstudioValidacionYFormularioController extends Controller
             $form->bindRequest($request);
             if ($form->isValid()) {
                 // Se procesa el formulario
-                
-                $this->get('session')->setFlash('mensaje','El formulario era válido');
+
+                $this->get('session')->setFlash('mensaje', 'El formulario era válido');
                 return $this->redirect($this->generateUrl('jamn_EVF_form_usuario'));
             }
         }
 
         return $this->render(
                         'JAMNotasFrontendBundle:EstudioValidacionYFormulario:formUsuario.html.twig', array(
+                    'form' => $form->createView(),
+                ));
+    }
+
+    public function formUploadAction() {
+        
+        $nota = new Nota();
+        $form = $this->createForm(new NotaType(), $nota);
+
+        if ($this->getRequest()->getMethod() === 'POST') {
+            $form->bindRequest($this->getRequest());
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getEntityManager();
+
+                $nota->upload();
+                
+                $em->persist($nota);
+                $em->flush();
+
+                $this->redirect($this->generateUrl('jamn_EVF_form_upload'));
+            }
+        }
+
+        return $this->render(
+                        'JAMNotasFrontendBundle:EstudioValidacionYFormulario:formUpload.html.twig', array(
                     'form' => $form->createView(),
                 ));
     }

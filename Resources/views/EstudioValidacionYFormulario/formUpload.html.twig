@@ -1,0 +1,18 @@
+{% extends '::base.html.twig' %}
+
+ {% block body %}
+ 
+ {% if app.session.hasFlash('mensaje') %}
+ <div style="background-color: rosybrown">
+        {{ app.session.flash('mensaje') }}
+    </div>
+{% endif %}
+ <h1>Upload File</h1>
+
+<form action="{{ path('jamn_EVF_form_upload') }}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+
+    <input type="submit" value="Upload Document" />
+</form>
+
+ {% endblock %}

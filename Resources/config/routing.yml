@@ -92,3 +92,7 @@ jamn_EVF:
 jamn_EVF_form_usuario:
  pattern: /estudio_valyforms/form_usuario
  defaults: { _controller: JAMNotasFrontendBundle:EstudioValidacionYFormulario:formUsuario }
+ 
+jamn_EVF_form_upload:
+ pattern: /estudio_valyforms/form_upload
+ defaults: { _controller: JAMNotasFrontendBundle:EstudioValidacionYFormulario:formUpload } 
