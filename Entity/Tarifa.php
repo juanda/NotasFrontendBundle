@@ -48,14 +48,14 @@ class Tarifa
     /**
      * @var date $validoDesde
      *
-     * @ORM\Column(name="validoDesde", type="date")
+     * @ORM\Column(name="validoDesde", type="date", nullable="true")
      */
     private $validoDesde;
 
     /**
      * @var date $validoHasta
      *
-     * @ORM\Column(name="validoHasta", type="date")
+     * @ORM\Column(name="validoHasta", type="date", nullable="true")
      */
     private $validoHasta;
 

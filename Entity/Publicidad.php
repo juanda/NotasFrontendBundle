@@ -38,7 +38,7 @@ class Publicidad
     /**
      * @var string $path
      *
-     * @ORM\Column(name="path", type="string", length=255)
+     * @ORM\Column(name="path", type="string", length=255, nullable="true")
      */
     private $path;
 

@@ -142,8 +142,10 @@ class NotasController extends Controller
         $session = $this->get('session');
         $em = $this->getDoctrine()->getEntityManager();
 
-        $usuario = $em->getRepository('JAMNotasFrontendBundle:Usuario')
-                ->findOneByUsername('alberto');
+//        $usuario = $em->getRepository('JAMNotasFrontendBundle:Usuario')
+//                ->findOneByUsername('alberto');
+        
+        $usuario = $this->get('security.context')->getToken()->getUser();
 
 
         $busqueda_tipo = $session->get('busqueda.tipo');
