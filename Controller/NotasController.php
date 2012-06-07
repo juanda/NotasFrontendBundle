@@ -144,7 +144,7 @@ class NotasController extends Controller
 
 //        $usuario = $em->getRepository('JAMNotasFrontendBundle:Usuario')
 //                ->findOneByUsername('alberto');
-        
+
         $usuario = $this->get('security.context')->getToken()->getUser();
 
 
@@ -168,13 +168,17 @@ class NotasController extends Controller
                     findByUsuarioOrderedByFecha($usuario);
         }
 
-
-        $nota_selecionada_id = $session->get('nota.seleccionada.id', '1');
-
-        $nota_seleccionada = $em->getRepository('JAMNotasFrontendBundle:Nota')->
-                findOneById($nota_selecionada_id);
-
-
+        $nota_seleccionada = null;
+        if (count($notas) > 0) {
+            if ($session->has('nota.seleccionada.id')) {
+                $nota_selecionada_id = $session->get('nota.seleccionada.id');
+                $nota_seleccionada = $em->getRepository('JAMNotasFrontendBundle:Nota')->
+                        findOneById($nota_selecionada_id);
+            } else {
+                $nota_seleccionada = $notas[0];
+            }
+        }
+        
         return array($etiquetas, $notas, $nota_seleccionada);
     }
 
