@@ -3,6 +3,7 @@
 namespace Jazzyweb\AulasMentor\NotasFrontendBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Nota;
 
 class NotasController extends Controller
 {
@@ -38,12 +39,21 @@ class NotasController extends Controller
                 break;
         }
 
-        list($etiquetas, $notas, $nota_seleccionada) = $this->dameEtiquetasYNotas();
-
+        list($etiquetas, $notas, $notaSeleccionada) = $this->dameEtiquetasYNotas();
+        
+        // creamos un formulario para borrar la nota
+        if ($notaSeleccionada instanceof Nota) {            
+            $deleteForm = $this->createDeleteForm($notaSeleccionada->getId())->createView();
+            
+        } else {
+            $deleteForm = null;
+        }
+        
         return $this->render('JAMNotasFrontendBundle:Notas:index.html.twig', array(
                     'etiquetas' => $etiquetas,
                     'notas' => $notas,
-                    'nota_seleccionada' => $nota_seleccionada,
+                    'nota_seleccionada' => $notaSeleccionada,
+                    'delete_form' => $deleteForm,
                 ));
     }
 
@@ -170,8 +180,8 @@ class NotasController extends Controller
 
         $nota_seleccionada = null;
         if (count($notas) > 0) {
-            if ($session->has('nota.seleccionada.id')) {
-                $nota_selecionada_id = $session->get('nota.seleccionada.id');
+            $nota_selecionada_id = $session->get('nota.seleccionada.id');
+            if (!is_null($nota_selecionada_id) && $nota_selecionada_id != '') {                
                 $nota_seleccionada = $em->getRepository('JAMNotasFrontendBundle:Nota')->
                         findOneById($nota_selecionada_id);
             } else {
@@ -180,6 +190,14 @@ class NotasController extends Controller
         }
         
         return array($etiquetas, $notas, $nota_seleccionada);
+    }
+    
+    protected function createDeleteForm($id)
+    {
+        return $this->createFormBuilder(array('id' => $id))
+                        ->add('id', 'hidden')
+                        ->getForm()
+        ;
     }
 
 }

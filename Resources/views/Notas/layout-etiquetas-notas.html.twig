@@ -46,6 +46,29 @@
 
     {% endblock %} <!-- End block cabecera -->
 
+
+    {% block etiquetas %}
+
+<div class="ui-layout-west etiquetas">
+    <h3 class="ui-widget-header">Etiquetas</h3>
+    <div class="ui-layout-content ui-widget-content">
+        <ul>
+            <li>
+                <span class="ui-icon ui-icon-star" style="float:left;"></span>
+                <a href="{{ path("jamn_conetiqueta", {"etiqueta": 'todas'}) }}"> todas las notas</a>
+            </li>
+                {% for etiqueta in etiquetas %}
+            <li>
+                <span class="ui-icon ui-icon-tag" style="float:left;"></span>
+                <a href="{{ path("jamn_conetiqueta", {"etiqueta": etiqueta.id}) }}">{{ etiqueta.texto }}</a>
+            </li>
+                {% endfor%}
+        </ul>
+    </div>
+</div>
+
+    {% endblock %}  <!-- End block etiquetas -->
+
     {% block notas %}
 
 <div class="ui-layout-center">
@@ -70,7 +93,7 @@
         <div class="ui-widget-content my-widget-content">
 
                 {% for nota in notas %}
-                {%if nota.id == nota_seleccionada.id %}
+                {% if nota.id == nota_seleccionada.id %}
             <div class="nota seleccionada">
                 {% else %}
                     <div class="nota">
@@ -102,28 +125,91 @@
 
     {% endblock %} <!-- End block centro -->
 
-    {% block etiquetas %}
 
-            <div class="ui-layout-west etiquetas">
-                <h3 class="ui-widget-header">Etiquetas</h3>
-                <div class="ui-layout-content ui-widget-content">
-                    <ul>
-                        <li>
-                            <span class="ui-icon ui-icon-star" style="float:left;"></span>
-                            <a href="{{ path("jamn_conetiqueta", {"etiqueta": 'todas'}) }}"> todas las notas</a>
-                        </li>
-                {% for etiqueta in etiquetas %}
-                        <li>
-                            <span class="ui-icon ui-icon-tag" style="float:left;"></span>
-                            <a href="{{ path("mn_conetiqueta", {"etiqueta": etiqueta.id}) }}">{{ etiqueta.texto }}</a>
-                        </li>
-                {% endfor%}
-                    </ul>
-                </div>
-            </div>
+    {% block detalle_y_edicion %}
 
-    {% endblock %}  <!-- End block etiquetas -->
+            <div class="ui-layout-east">
+                <h3 class="ui-widget-header">Nota</h3>
 
+    {% if nota_seleccionada %}
 
+                <div id="confirma-borrado"></div>
+
+                <div class="ui-widget my-widget">
+                    <div class="ui-widget-content my-widget-content">
+                        <span class="my-buttonset-left">
+                            <a id="btn_crear" href="{{ path('jamn_nueva')}}">crear</a>
+                        </span>
+
+                        <span class="my-buttonset-right">
+                            <a id="btn_editar" href="{{ path('jamn_editar', {'id': nota_seleccionada.id }) }}">editar</a>
+                            <button id="btn_borrar" type="submit">Borrar</button>
+                            <form id="form_borrar" action="{{ path('jamn_borrar', { 'id': nota_seleccionada.id }) }}" method="post">
+                {{ form_widget(delete_form) }}
+                                </form>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="separador"></div>
+
+                    <div class="ui-layout-content ui-widget-content">
+                        <div class="ui-widget-content my-widget-content">
+                            <div id="nota-detalle-ajax">
+
+                                <div class="nota-detalle-titulo">
+                        {{ nota_seleccionada.titulo }}
+                                    </div>
+
+                    {% if nota_seleccionada.path %}
+                                    <div class="nota-detalle-adjunto">
+                                        <span class="ui-icon ui-icon-disk" style="float: left;"></span>
+                        {% set urlFile = asset('uploads') ~ '/' ~ app.user.getUsername ~ '-' ~ nota_seleccionada.path %}
+                                        <a href="{{ urlFile }}">{{ nota_seleccionada.nombreFichero}}</a>
+
+                                    </div>
+                    {% endif %}
+
+                                    <div class="nota-detalle-etiquetas">
+                        {% for etiqueta in nota_seleccionada.etiquetas %}
+                                            <span class="nota-detalle-etiqueta ui-corner-all">{{ etiqueta.texto }}</span>
+                        {% endfor %}
+
+                                        </div>
+                                        <div class="nota-detalle-content">
+                        {{ nota_seleccionada.texto|raw }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+    {% else %}
+                                <div class="ui-widget my-widget">
+                                    <div class="ui-widget-content my-widget-content">
+                                        <span class="my-buttonset-left">
+                                            <a id="btn_crear" href="{{ path('jamn_nueva')}}">crear</a>
+                                        </span>
+                                    </div>
+                                </div>
+    {% endif %}
+                            </div>detalle_y_edicion
+    {% endblock %} <!-- End block detalle_y_edicion -->
+
+ {% block pie %}
+                            <div class="ui-layout-south ui-widget-content">
+                                <div class="pie-de-pagina">
+                                    <div class="cr">
+                                        © 2012, Juan David Rodríguez
+                                    </div>
+                                    <div class="powered">
+                                        <span style="font-style: italic">powered by</span>
+                                        <img height="30" src="{{ asset("bundles/jamnotasfrontend/images/php-logo.jpg") }}"/>
+                                        <img height="30" src="{{ asset("bundles/jamnotasfrontend/images/logo.png") }} "/>
+                                        <img height="30" src="{{ asset("bundles/jamnotasfrontend/images/jquery_logo.png") }} "/>
+
+                                    </div>
+                                </div>
+                            </div>
+
+ {% endblock %} <!-- End block pie -->
 
  {% endblock %} 
