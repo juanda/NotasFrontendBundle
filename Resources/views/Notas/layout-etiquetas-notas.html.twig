@@ -1,6 +1,6 @@
 {% extends '::base.html.twig' %}
 
- {% block stylesheets%}
+{% block stylesheets%}
 <link href="{{ asset('bundles/jamnotasfrontend/vendors/jquery/css/ui-lightness/jquery-ui-1.8.17.custom.css') }}" type="text/css" rel="stylesheet" />
 <link href="{{ asset('bundles/jamnotasfrontend/vendors/jquery-layout/css/layout-default-latest.css') }}" type="text/css" rel="stylesheet" />
 <link href="{{ asset('bundles/jamnotasfrontend/css/ui.css') }}" type="text/css" rel="stylesheet" />
@@ -13,203 +13,16 @@
 <script src="{{ asset('bundles/jamnotasfrontend/js/ui.js') }}" type="text/javascript"></script>
 {% endblock %}
 
- {% block body %}
+{% block body %}
+   
+    {% include 'JAMNotasFrontendBundle:Notas:cabecera.html.twig' %}
+           
+    {% include 'JAMNotasFrontendBundle:Notas:etiquetas.html.twig' %}
+   
+    {% include 'JAMNotasFrontendBundle:Notas:notas.html.twig' %}
 
-    {% block cabecera %}
+    {% include 'JAMNotasFrontendBundle:Notas:pie.html.twig' %}  
 
-<div class="ui-layout-north ui-widget-content" >
-
-    <div class="banner">
-        <span style="font-size: xx-large">
-            PUBLICIDAD       
-        </span>
-        <a class="ui-button usuario-tool premium ui-corner-all" href="{{ path('jamn_contratar') }}">
-            contrata premium, elimina la publicidad y obten numerosas ventajas!
-        </a>
-    </div>
-
-    <div class="logo">
-        <span>MentorNotas</span>
-        <img style="float:left;" height="60" src="{{ asset('bundles/jamnotasfrontend/images/mentor.png')}}"></img>
-
-    </div>
-
-    <div class="signout">
-        <span class="usuario-nombre">{{ app.user.nombre }} {{app.user.apellidos }}</span>
-        <a id="btn_salir" class="ui-button ui-button-text-icon-primary usuario-tool salir ui-corner-all" href="{{path('jamn_logout')}}">
-            <span class="ui-button-icon-primary ui-icon ui-icon-power"></span>
-            <span class="ui-button-text">salir</span></a>
-    </div>
-
-
-</div>
-
-    {% endblock %} <!-- End block cabecera -->
-
-
-    {% block etiquetas %}
-
-<div class="ui-layout-west etiquetas">
-    <h3 class="ui-widget-header">Etiquetas</h3>
-    <div class="ui-layout-content ui-widget-content">
-        <ul>
-            <li>
-                <span class="ui-icon ui-icon-star" style="float:left;"></span>
-                <a href="{{ path("jamn_conetiqueta", {"etiqueta": 'todas'}) }}"> todas las notas</a>
-            </li>
-                {% for etiqueta in etiquetas %}
-            <li>
-                <span class="ui-icon ui-icon-tag" style="float:left;"></span>
-                <a href="{{ path("jamn_conetiqueta", {"etiqueta": etiqueta.id}) }}">{{ etiqueta.texto }}</a>
-            </li>
-                {% endfor%}
-        </ul>
-    </div>
-</div>
-
-    {% endblock %}  <!-- End block etiquetas -->
-
-    {% block notas %}
-
-<div class="ui-layout-center">
-
-    <h3 class="ui-widget-header">Listado de notas</h3>
-
-
-    <div class="ui-widget my-widget">
-        <div class="ui-widget-content my-widget-content">
-
-            <form id="form_buscar" action="{{ path("jamn_buscar") }}" method="post">
-                <input class="buscar ui-corner-all" size="20" name="termino" id="termino"/>
-                <button type=submit" class="btn_buscar"> Buscar</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="separador"></div>
-
-
-    <div class="ui-layout-content ui-widget-content">
-        <div class="ui-widget-content my-widget-content">
-
-                {% for nota in notas %}
-                {% if nota.id == nota_seleccionada.id %}
-            <div class="nota seleccionada">
-                {% else %}
-                    <div class="nota">
-                {% endif %}
-                            <a href="{{ path('jamn_nota',{"id": nota.id}) }}">
-                                <div class="nota-container">
-                                    <div class="nota-titulo">
-                            {{ nota.titulo }}
-                                        </div>
-                                        <div class="nota-content">
-                                            <span class="nota-fecha"> {{ nota.fecha.date }}</span>
-                            {{ nota.texto|raw }}
-
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-
-                {% else %}
-                            <div class="ui-state-highlight"><span class="ui-icon ui-icon-alert" style="float:left;"></span><span style="padding: 0.5em;"> No se han encontrado notas</span></div>
-                {% endfor %}
-
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-    {% endblock %} <!-- End block centro -->
-
-
-    {% block detalle_y_edicion %}
-
-            <div class="ui-layout-east">
-                <h3 class="ui-widget-header">Nota</h3>
-
-    {% if nota_seleccionada %}
-
-                <div id="confirma-borrado"></div>
-
-                <div class="ui-widget my-widget">
-                    <div class="ui-widget-content my-widget-content">
-                        <span class="my-buttonset-left">
-                            <a id="btn_crear" href="{{ path('jamn_nueva')}}">crear</a>
-                        </span>
-
-                        <span class="my-buttonset-right">
-                            <a id="btn_editar" href="{{ path('jamn_editar', {'id': nota_seleccionada.id }) }}">editar</a>
-                            <button id="btn_borrar" type="submit">Borrar</button>
-                            <form id="form_borrar" action="{{ path('jamn_borrar', { 'id': nota_seleccionada.id }) }}" method="post">
-                {{ form_widget(delete_form) }}
-                                </form>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="separador"></div>
-
-                    <div class="ui-layout-content ui-widget-content">
-                        <div class="ui-widget-content my-widget-content">
-                            <div id="nota-detalle-ajax">
-
-                                <div class="nota-detalle-titulo">
-                        {{ nota_seleccionada.titulo }}
-                                    </div>
-
-                    {% if nota_seleccionada.path %}
-                                    <div class="nota-detalle-adjunto">
-                                        <span class="ui-icon ui-icon-disk" style="float: left;"></span>
-                        {% set urlFile = asset('uploads') ~ '/' ~ app.user.getUsername ~ '-' ~ nota_seleccionada.path %}
-                                        <a href="{{ urlFile }}">{{ nota_seleccionada.nombreFichero}}</a>
-
-                                    </div>
-                    {% endif %}
-
-                                    <div class="nota-detalle-etiquetas">
-                        {% for etiqueta in nota_seleccionada.etiquetas %}
-                                            <span class="nota-detalle-etiqueta ui-corner-all">{{ etiqueta.texto }}</span>
-                        {% endfor %}
-
-                                        </div>
-                                        <div class="nota-detalle-content">
-                        {{ nota_seleccionada.texto|raw }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-    {% else %}
-                                <div class="ui-widget my-widget">
-                                    <div class="ui-widget-content my-widget-content">
-                                        <span class="my-buttonset-left">
-                                            <a id="btn_crear" href="{{ path('jamn_nueva')}}">crear</a>
-                                        </span>
-                                    </div>
-                                </div>
-    {% endif %}
-                            </div>detalle_y_edicion
-    {% endblock %} <!-- End block detalle_y_edicion -->
-
- {% block pie %}
-                            <div class="ui-layout-south ui-widget-content">
-                                <div class="pie-de-pagina">
-                                    <div class="cr">
-                                        © 2012, Juan David Rodríguez
-                                    </div>
-                                    <div class="powered">
-                                        <span style="font-style: italic">powered by</span>
-                                        <img height="30" src="{{ asset("bundles/jamnotasfrontend/images/php-logo.jpg") }}"/>
-                                        <img height="30" src="{{ asset("bundles/jamnotasfrontend/images/logo.png") }} "/>
-                                        <img height="30" src="{{ asset("bundles/jamnotasfrontend/images/jquery_logo.png") }} "/>
-
-                                    </div>
-                                </div>
-                            </div>
-
- {% endblock %} <!-- End block pie -->
-
- {% endblock %} 
+    {% block detalle_y_edicion %} {% endblock %}
+    
+{% endblock %} 
