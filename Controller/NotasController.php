@@ -40,15 +40,14 @@ class NotasController extends Controller
         }
 
         list($etiquetas, $notas, $notaSeleccionada) = $this->dameEtiquetasYNotas();
-        
+
         // creamos un formulario para borrar la nota
-        if ($notaSeleccionada instanceof Nota) {            
+        if ($notaSeleccionada instanceof Nota) {
             $deleteForm = $this->createDeleteForm($notaSeleccionada->getId())->createView();
-            
         } else {
             $deleteForm = null;
         }
-        
+
         return $this->render('JAMNotasFrontendBundle:Notas:index.html.twig', array(
                     'etiquetas' => $etiquetas,
                     'notas' => $notas,
@@ -120,13 +119,25 @@ class NotasController extends Controller
     {
         $request = $this->getRequest();
         $session = $this->get('session');
+        $form = $this->createDeleteForm($request->get('id'));
 
-        // borrado de la nota $request->get('id');
+        $form->bindRequest($request);
 
-        $session->setFlash('mensaje', 'Se debería borrar la nota ' . $request->get('id'));
-        $session->set('nota.seleccionada.id', '');
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $entity = $em->getRepository('JAMNotasFrontendBundle:Nota')->find($request->get('id'));
 
-        return $this->forward('JAMNotasFrontendBundle:Notas:index');
+            if (!$entity) {
+                throw $this->createNotFoundException('Esa nota no existe.');
+            }
+
+            $em->remove($entity);
+            $em->flush();
+            
+            $session->set('nota.seleccionada.id','');       
+        }
+
+        return $this->redirect($this->generateUrl('jamn_homepage'));
     }
 
     public function miEspacioAction()
@@ -181,17 +192,17 @@ class NotasController extends Controller
         $nota_seleccionada = null;
         if (count($notas) > 0) {
             $nota_selecionada_id = $session->get('nota.seleccionada.id');
-            if (!is_null($nota_selecionada_id) && $nota_selecionada_id != '') {                
+            if (!is_null($nota_selecionada_id) && $nota_selecionada_id != '') {
                 $nota_seleccionada = $em->getRepository('JAMNotasFrontendBundle:Nota')->
                         findOneById($nota_selecionada_id);
             } else {
                 $nota_seleccionada = $notas[0];
             }
         }
-        
+
         return array($etiquetas, $notas, $nota_seleccionada);
     }
-    
+
     protected function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))

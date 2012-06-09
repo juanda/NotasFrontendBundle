@@ -97,6 +97,24 @@ $(document).ready( function() {
         }
     });
     
+    $("#btn_borrar").click(function() {
+            $( "#confirma-borrado" ).dialog({
+                        resizable: false,
+                        height:140,
+                        modal: true,
+                        title: 'Se borrará la nota',
+                        buttons: {
+                                "Borrar": function() {
+                                        $( this ).dialog( "close" );
+                                        $("#form_borrar").submit();
+                                },
+                                'Cancelar': function() {
+                                        $( this ).dialog( "close" );
+                                }
+                        }
+                });
+    });
+    
     
 /**
      * Para colocar un selector de temas, descomentar desde **INICIO THEMESWITCHER**

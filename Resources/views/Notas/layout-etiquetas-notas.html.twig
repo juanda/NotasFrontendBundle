@@ -23,7 +23,7 @@
         <span style="font-size: xx-large">
             PUBLICIDAD       
         </span>
-        <a class="ui-button usuario-tool premium ui-corner-all" href="">
+        <a class="ui-button usuario-tool premium ui-corner-all" href="{{ path('jamn_contratar') }}">
             contrata premium, elimina la publicidad y obten numerosas ventajas!
         </a>
     </div>
@@ -80,7 +80,7 @@
         <div class="ui-widget-content my-widget-content">
 
             <form id="form_buscar" action="{{ path("jamn_buscar") }}" method="post">
-                <input class="buscar ui-corner-all" size="20" name="txt_buscar" id="txt_buscar"/>
+                <input class="buscar ui-corner-all" size="20" name="termino" id="termino"/>
                 <button type=submit" class="btn_buscar"> Buscar</button>
             </form>
         </div>
