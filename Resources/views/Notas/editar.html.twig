@@ -1,16 +1,117 @@
 {% extends 'JAMNotasFrontendBundle:Notas:layout-etiquetas-notas.html.twig' %}
 
- {% block body %}
+{% block javascripts%}
 
-     {{ parent() }}
+{{ parent() }}
+<script src="{{ asset('bundles/jamnotasfrontend/vendors/CLEditor1_3_0/jquery.cleditor.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/jamnotasfrontend/vendors/tagit/js/tag-it.js') }}" type="text/javascript"></script>
 
-     <div id="detalle_nota" class="marco detalle_nota">
-         <h2>Detalle de nota</h2>
-         <h2>Formulario editar Nota {{ nota_a_editar.id}}</h2>
-         <form action="{{ path('jamn_editar', {id: nota_a_editar.id}) }}" method="POST">
-             <input type="text" id="titulo" name="titulo" value="{{ nota_a_editar.titulo }}" />
-             <input type="submit" value="guardar" />
-         </form>
-     </div>
+<script>
+    $(document).ready( function() {
+ $("#nota_texto").cleditor({
+                    controls: "bold italic underline strikethrough subscript superscript | font size " +
+                        "style | color highlight removeformat | bullets numbering | outdent " +
+                        "indent | alignleft center alignright justify | undo redo | " +
+                        "rule image link unlink | print source"
+                });
+   })
 
- {% endblock %}
+    </script>
+{% endblock%}
+
+{% block stylesheets %}
+{{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/jamnotasfrontend/vendors/CLEditor1_3_0/jquery.cleditor.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/jamnotasfrontend/vendors/tagit/css/jquery.ui.autocomplete.custom.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/jamnotasfrontend/vendors/tagit/css/jquery.tagit.css') }}" />
+
+{% endblock %}
+
+
+{% block detalle_y_edicion %}
+
+    <div class="ui-layout-east">
+        <h3 class="ui-widget-header">Editar Nota</h3>
+
+        <div id="confirma-borrado"></div>
+
+        <div class="ui-widget my-widget">
+            <div class="ui-widget-content my-widget-content">
+                <span class="my-buttonset-left">
+                    <button id="btn_hecho_editar">hecho</button>
+                </span>
+
+                <span class="my-buttonset-right">
+                    <a id="btn_cancelar" href="{{ path('mn_nota', {'id_nota': nota.id}) }}">cancelar</a>
+                    <button id="btn_borrar" type="submit">Borrar</button>
+                    <form id="form_borrar" action="{{ path('mn_borrar', { 'id': nota.id }) }}" method="post">
+                {{ form_widget(delete_form) }}
+                        </form>
+                    </span>
+                </div>
+            </div>
+
+            <div style="padding: 10px;"></div>
+
+            <div class="ui-layout-content ui-widget my-widget">
+                <div class="ui-widget-content my-widget-content">
+
+                    <form id="form_editar_nota" action="{{ path('mn_editar', { 'id': nota.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+
+                {% if form_errors(edit_form) %}
+                        <div class="ui-state-error">{{ form_errors(edit_form) }}</div>
+                {% endif %}
+
+                        <div class="row">
+                            <div style="font-size: small">Título:</div>
+                        {% if form_errors(edit_form.titulo) %}
+                            <div style="width: 300px;" class="ui-state-error">{{ form_errors(edit_form.titulo) }}</div>
+                        {% endif %}
+
+                        {{ form_widget(edit_form.titulo, {'attr': {'class': 'nota-titulo ui-corner-all', 'style': 'width:300px;'} }) }}
+                        </div>
+
+                        <div class="row">
+                            <span style="font-size: small">Etiquetas:</span>
+                            <ul id="nota_etiquetas">
+                        {%for etiqueta in nota.etiquetas %}
+                                    <li>{{ etiqueta.texto }}</li>
+                        {% endfor %}
+                                </ul>
+                            </div>
+
+                            <div class="row">
+                    {% if form_errors(edit_form.texto) %}
+                                    <div class="ui-state-error">{{ form_errors(edit_form.texto) }}</div>
+                    {% endif %}
+                    {{ form_widget(edit_form.texto) }}
+
+                                </div>
+
+                                <div class="row">
+                                    <div>
+                                        <div style="font-size: small">Fichero:</div>
+                    {% if nota.nombreFichero %}
+                    {% set urlFile = asset('uploads') ~ '/' ~ app.user.getUsername ~ '-' ~ nota.nombreFichero %}
+                                        <a href="{{ urlFile }}">{{ nota.nombreFichero}}</a>
+                    {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div style="font-size: small">Cambiar Fichero:</div>
+                    {% if form_errors(edit_form.fichero) %}
+                                    <div class="ui-state-error">{{ form_errors(edit_form.fichero) }}</div>
+                    {% endif %}
+                    {{ form_widget(edit_form.fichero) }}
+
+                                </div>
+                {{ form_rest(edit_form) }}
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+
+{% endblock %}

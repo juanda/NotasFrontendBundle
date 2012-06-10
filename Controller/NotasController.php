@@ -4,6 +4,7 @@ namespace Jazzyweb\AulasMentor\NotasFrontendBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Nota;
+use Jazzyweb\AulasMentor\NotasFrontendBundle\Form\Type\NotaType;
 
 class NotasController extends Controller
 {
@@ -84,34 +85,58 @@ class NotasController extends Controller
     public function editarAction()
     {
         $request = $this->getRequest();
-        $session = $this->get('session');
+        $id = $request->get('id');
+        list($etiquetas, $notas, $nota_seleccionada) = $this->dameEtiquetasYNotas();
 
-        // Se recupera la nota que viene en la request para ser editada
+        $em = $this->getDoctrine()->getEntityManager();
 
-        $nota = array(
-            'id' => $request->get('id'),
-            'titulo' => 'nota',
-        );
+        $nota = $em->getRepository('JAMNotasFrontendBundle:Nota')->find($id);
 
-
-        if ($request->getMethod() == 'POST') {
-
-            // si los datos que vienen en la request son buenos guarda la nota
-
-            $session->setFlash('mensaje', 'Se debería editar la nota:'
-                    . $request->get('titulo') .
-                    '. Como aún no disponemos de un servicio para persistir los
-                         datos, la nota permanece igual');
-
-            return $this->redirect($this->generateUrl('jamn_nota', array('id' => $request->get('id'))));
+        if (!$nota) {
+            throw $this->createNotFoundException('No se ha podido encontrar esa nota');
         }
 
-        list($etiquetas, $notas, $nota_seleccionada) = $this->dameEtiquetasYNotas();
+        $editForm = $this->createForm(new NotaType(), $nota);
+        $deleteForm = $this->createDeleteForm($id);
+
+        if ($this->getRequest()->getMethod() == "POST") {
+            $request = $this->getRequest();
+
+            $editForm->bindRequest($request);
+
+            if ($editForm->isValid()) {
+                $usuario = $this->get('security.context')->getToken()->getUser();
+
+                $item = $request->get('item');
+                $this->actualizaEtiquetas($nota, $item['tags'], $usuario);
+
+                $nota->setFecha(new \DateTime());
+
+                $file = $editForm['fichero']->getData();
+
+                if ($file) {
+
+                    list($dir, $filename) = $this->moveFile($file);
+
+                    $nota->setNombreFichero($filename);
+                    $nota->setRutaFichero($dir);
+                }
+
+                $em->persist($nota);
+
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('mn_homepage'));
+            }
+        }
 
         return $this->render('JAMNotasFrontendBundle:Notas:editar.html.twig', array(
                     'etiquetas' => $etiquetas,
                     'notas' => $notas,
-                    'nota_a_editar' => $nota,
+                    'nota_seleccionada' => $nota,
+                    'edit_form' => $editForm->createView(),
+                    'delete_form' => $deleteForm->createView(),
+                    'edita' => true,
                 ));
     }
 
@@ -133,8 +158,8 @@ class NotasController extends Controller
 
             $em->remove($entity);
             $em->flush();
-            
-            $session->set('nota.seleccionada.id','');       
+
+            $session->set('nota.seleccionada.id', '');
         }
 
         return $this->redirect($this->generateUrl('jamn_homepage'));
@@ -151,20 +176,10 @@ class NotasController extends Controller
         
     }
 
-    /**
-     * Función Mock para poder desarrollar y probar la lógica de control.
-     *
-     * La función real que finalmente se implemente, utilizará el filtro almacenado
-     * en la sesión y el modelo para calcular la etiquetas, notas y nota seleccionada
-     * que en cada momento se deban pintar.
-     */
     protected function dameEtiquetasYNotas()
     {
         $session = $this->get('session');
         $em = $this->getDoctrine()->getEntityManager();
-
-//        $usuario = $em->getRepository('JAMNotasFrontendBundle:Usuario')
-//                ->findOneByUsername('alberto');
 
         $usuario = $this->get('security.context')->getToken()->getUser();
 
