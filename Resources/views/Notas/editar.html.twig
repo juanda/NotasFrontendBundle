@@ -8,7 +8,53 @@
 
 <script>
     $(document).ready( function() {
- $("#nota_texto").cleditor({
+        var tituloBox = $("#nota_titulo");
+                
+                $( "#btn_hecho_crear" ).button({
+                    icons: {
+                        primary: "ui-icon-disk"
+                    }
+                });
+                
+                $("#btn_hecho_crear").click(function(){
+                    $("#form_crear_nota").submit();
+                });
+                
+                $( "#btn_hecho_editar" ).button({
+                    icons: {
+                        primary: "ui-icon-disk"
+                    }
+                });
+                
+                $("#btn_hecho_editar").click(function(){
+                    $("#form_editar_nota").submit();
+                });
+                
+                $( "#btn_cancelar" ).button({
+                    icons: {
+                        primary: "ui-icon-cancel"
+                    }
+                });
+                
+   
+                
+                $("#nota_etiquetas").tagit({
+                        availableTags: [{%for etiqueta in etiquetas%} "{{ etiqueta.texto}}", {% endfor %}]
+                        
+                });
+                
+                
+                tituloBox.focus(function(){
+                    if($(this).attr("value") == tituloBox1Default) $(this).attr("value", "");
+                    $(this).addClass("nota-titulo-activo");
+                });
+                
+                tituloBox.blur(function(){
+                    $(this).removeClass("nota-titulo-activo");
+                    
+                        
+                }); 
+        $("#nota_texto").cleditor({
                     controls: "bold italic underline strikethrough subscript superscript | font size " +
                         "style | color highlight removeformat | bullets numbering | outdent " +
                         "indent | alignleft center alignright justify | undo redo | " +
@@ -42,9 +88,9 @@
                 </span>
 
                 <span class="my-buttonset-right">
-                    <a id="btn_cancelar" href="{{ path('mn_nota', {'id_nota': nota.id}) }}">cancelar</a>
+                    <a id="btn_cancelar" href="{{ path('jamn_nota', {'id': nota_seleccionada.id}) }}">cancelar</a>
                     <button id="btn_borrar" type="submit">Borrar</button>
-                    <form id="form_borrar" action="{{ path('mn_borrar', { 'id': nota.id }) }}" method="post">
+                    <form id="form_borrar" action="{{ path('jamn_borrar', { 'id': nota_seleccionada.id }) }}" method="post">
                 {{ form_widget(delete_form) }}
                         </form>
                     </span>
@@ -56,7 +102,7 @@
             <div class="ui-layout-content ui-widget my-widget">
                 <div class="ui-widget-content my-widget-content">
 
-                    <form id="form_editar_nota" action="{{ path('mn_editar', { 'id': nota.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+                    <form id="form_editar_nota" action="{{ path('jamn_editar', { 'id': nota_seleccionada.id }) }}" method="post" {{ form_enctype(edit_form) }}>
 
                 {% if form_errors(edit_form) %}
                         <div class="ui-state-error">{{ form_errors(edit_form) }}</div>
@@ -74,7 +120,7 @@
                         <div class="row">
                             <span style="font-size: small">Etiquetas:</span>
                             <ul id="nota_etiquetas">
-                        {%for etiqueta in nota.etiquetas %}
+                        {%for etiqueta in nota_seleccionada.etiquetas %}
                                     <li>{{ etiqueta.texto }}</li>
                         {% endfor %}
                                 </ul>
@@ -91,18 +137,18 @@
                                 <div class="row">
                                     <div>
                                         <div style="font-size: small">Fichero:</div>
-                    {% if nota.nombreFichero %}
-                    {% set urlFile = asset('uploads') ~ '/' ~ app.user.getUsername ~ '-' ~ nota.nombreFichero %}
+                    {% if nota_seleccionada.path %}
+                    {% set urlFile = asset('uploads') ~ '/' ~ app.user.getUsername ~ '-' ~ nota_seleccionada.nombreFichero %}
                                         <a href="{{ urlFile }}">{{ nota.nombreFichero}}</a>
                     {% endif %}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div style="font-size: small">Cambiar Fichero:</div>
-                    {% if form_errors(edit_form.fichero) %}
-                                    <div class="ui-state-error">{{ form_errors(edit_form.fichero) }}</div>
+                    {% if form_errors(edit_form.file) %}
+                                    <div class="ui-state-error">{{ form_errors(edit_form.file) }}</div>
                     {% endif %}
-                    {{ form_widget(edit_form.fichero) }}
+                    {{ form_widget(edit_form.file) }}
 
                                 </div>
                 {{ form_rest(edit_form) }}
