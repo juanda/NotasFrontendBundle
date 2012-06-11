@@ -5,19 +5,17 @@ namespace Jazzyweb\AulasMentor\NotasFrontendBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Nota;
 use Jazzyweb\AulasMentor\NotasFrontendBundle\Form\Type\NotaType;
+use Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Etiqueta;
 
-class NotasController extends Controller
-{
+class NotasController extends Controller {
 
-    public function indexAction()
-    {
+    public function indexAction() {
         $request = $this->getRequest(); // equivalente a $this->get('request');
         $session = $this->get('session');
 
         $ruta = $request->get('_route');
 
-        switch ($ruta)
-        {
+        switch ($ruta) {
             case 'jamn_homepage':
 
                 break;
@@ -57,8 +55,7 @@ class NotasController extends Controller
                 ));
     }
 
-    public function nuevaAction()
-    {
+    public function nuevaAction() {
         $request = $this->getRequest();
         $session = $this->get('session');
 
@@ -82,8 +79,7 @@ class NotasController extends Controller
                 ));
     }
 
-    public function editarAction()
-    {
+    public function editarAction() {
         $request = $this->getRequest();
         $id = $request->get('id');
         list($etiquetas, $notas, $nota_seleccionada) = $this->dameEtiquetasYNotas();
@@ -100,7 +96,6 @@ class NotasController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         if ($this->getRequest()->getMethod() == "POST") {
-            $request = $this->getRequest();
 
             $editForm->bindRequest($request);
 
@@ -112,21 +107,14 @@ class NotasController extends Controller
 
                 $nota->setFecha(new \DateTime());
 
-                $file = $editForm['fichero']->getData();
-
-                if ($file) {
-
-                    list($dir, $filename) = $this->moveFile($file);
-
-                    $nota->setNombreFichero($filename);
-                    $nota->setRutaFichero($dir);
-                }
+                if ($editForm['file']->getData() != '')                    
+                    $nota->upload($usuario->getUsername());
 
                 $em->persist($nota);
 
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('mn_homepage'));
+                return $this->redirect($this->generateUrl('jamn_homepage'));
             }
         }
 
@@ -140,8 +128,7 @@ class NotasController extends Controller
                 ));
     }
 
-    public function borrarAction()
-    {
+    public function borrarAction() {
         $request = $this->getRequest();
         $session = $this->get('session');
         $form = $this->createDeleteForm($request->get('id'));
@@ -165,19 +152,16 @@ class NotasController extends Controller
         return $this->redirect($this->generateUrl('jamn_homepage'));
     }
 
-    public function miEspacioAction()
-    {
+    public function miEspacioAction() {
         $params = 'Los datos de la página de inicio del espacio premium';
         return $this->render('JAMNotasFrontendBundle:Notas:index', array('params' => $params));
     }
 
-    public function rssAction()
-    {
+    public function rssAction() {
         
     }
 
-    protected function dameEtiquetasYNotas()
-    {
+    protected function dameEtiquetasYNotas() {
         $session = $this->get('session');
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -218,12 +202,37 @@ class NotasController extends Controller
         return array($etiquetas, $notas, $nota_seleccionada);
     }
 
-    protected function createDeleteForm($id)
-    {
+    protected function createDeleteForm($id) {
         return $this->createFormBuilder(array('id' => $id))
                         ->add('id', 'hidden')
                         ->getForm()
         ;
+    }
+
+    protected function actualizaEtiquetas($nota, $tags, $usuario) {
+
+        if (count($tags) == 0) {
+            $tags = array();
+        }
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $nota->getEtiquetas()->clear();
+
+
+        foreach ($tags as $tag) {
+            $etiqueta = $em->getRepository('JAMNotasFrontendBundle:Etiqueta')->findOneByTextoAndUsuario($tag, $usuario);
+
+            if (!$etiqueta instanceof Etiqueta) {
+                $etiqueta = new Etiqueta();
+                $etiqueta->setTexto($tag);
+                $etiqueta->setUsuario($usuario);
+                $em->persist($etiqueta);
+            }
+
+            $nota->addEtiqueta($etiqueta);
+        }
+
+        $em->flush();
     }
 
 }

@@ -37,13 +37,12 @@
                         </div>
 
                     {% if nota_seleccionada.path %}
-                        <div class="nota-detalle-adjunto">
-                            <span class="ui-icon ui-icon-disk" style="float: left;"></span>
-                        {% set urlFile = asset('uploads') ~ '/' ~ app.user.getUsername ~ '-' ~ nota_seleccionada.path %}
-                            <a href="{{ urlFile }}">{{ nota_seleccionada.nombreFichero}}</a>
-
-                        </div>
-                    {% endif %}
+                    <div class="nota-detalle-adjunto">
+                         <span class="ui-icon ui-icon-disk" style="float: left;"></span>
+                    {% set urlFile = asset( nota_seleccionada.webPath(app.user.getUsername) ) %}
+                                        <a href="{{ urlFile }}">{{ nota_seleccionada.path}}</a>
+                    </div>                    
+                    {% endif %}                                        
 
                         <div class="nota-detalle-etiquetas">
                         {% for etiqueta in nota_seleccionada.etiquetas %}
