@@ -57,25 +57,44 @@ class NotasController extends Controller {
 
     public function nuevaAction() {
         $request = $this->getRequest();
-        $session = $this->get('session');
-
-        if ($request->getMethod() == 'POST') {
-
-            // si los datos que vienen en la request son buenos guarda la nota
-
-            $session->setFlash('mensaje', 'Se debería guardar la nota:'
-                    . $request->get('nombre') . '. Como aun no disponemos de un
-                         servicio para persistir los datos, mostramos la nota 1');
-
-            return $this->redirect($this->generateUrl('jamn_nota', array('id' => 1)));
-        }
-
+        
         list($etiquetas, $notas, $nota_seleccionada) = $this->dameEtiquetasYNotas();
 
-        return $this->render('JAMNotasFrontendBundle:Notas:nueva.html.twig', array(
+        $em = $this->getDoctrine()->getEntityManager();        
+
+        $nota=new Nota();
+        $newForm = $this->createForm(new NotaType(), $nota);        
+
+        if ($request->getMethod() == "POST") {
+
+            $newForm->bindRequest($request);
+
+            if ($newForm->isValid()) {
+                $usuario = $this->get('security.context')->getToken()->getUser();
+
+                $item = $request->get('item');
+                $this->actualizaEtiquetas($nota, $item['tags'], $usuario);
+
+                $nota->setUsuario($usuario);
+                $nota->setFecha(new \DateTime());
+
+                if ($newForm['file']->getData() != '')
+                    $nota->upload($usuario->getUsername());
+
+                $em->persist($nota);
+
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('jamn_homepage'));
+            }
+        }
+
+        return $this->render('JAMNotasFrontendBundle:Notas:crearOEditar.html.twig', array(
                     'etiquetas' => $etiquetas,
                     'notas' => $notas,
-                    'nota_seleccionada' => $nota_seleccionada,
+                    'nota_seleccionada' => $nota,
+                    'new_form' => $newForm->createView(),                    
+                    'edita' => false,
                 ));
     }
 
@@ -107,7 +126,7 @@ class NotasController extends Controller {
 
                 $nota->setFecha(new \DateTime());
 
-                if ($editForm['file']->getData() != '')                    
+                if ($editForm['file']->getData() != '')
                     $nota->upload($usuario->getUsername());
 
                 $em->persist($nota);
@@ -118,7 +137,7 @@ class NotasController extends Controller {
             }
         }
 
-        return $this->render('JAMNotasFrontendBundle:Notas:editar.html.twig', array(
+        return $this->render('JAMNotasFrontendBundle:Notas:crearOEditar.html.twig', array(
                     'etiquetas' => $etiquetas,
                     'notas' => $notas,
                     'nota_seleccionada' => $nota,

@@ -1,169 +1,87 @@
-{% extends 'JAMNotasFrontendBundle:Notas:layout-etiquetas-notas.html.twig' %}
+<div class="ui-layout-east">
+    <h3 class="ui-widget-header">Editar Nota</h3>
 
-{% block javascripts%}
+    <div id="confirma-borrado"></div>
 
-{{ parent() }}
-<script src="{{ asset('bundles/jamnotasfrontend/vendors/CLEditor1_3_0/jquery.cleditor.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('bundles/jamnotasfrontend/vendors/tagit/js/tag-it.js') }}" type="text/javascript"></script>
+    <div class="ui-widget my-widget">
+        <div class="ui-widget-content my-widget-content">
+            <span class="my-buttonset-left">
+                <button id="btn_hecho_editar">hecho</button>
+            </span>
 
-<script>
-    $(document).ready( function() {
-        var tituloBox = $("#nota_titulo");
-                
-                $( "#btn_hecho_crear" ).button({
-                    icons: {
-                        primary: "ui-icon-disk"
-                    }
-                });
-                
-                $("#btn_hecho_crear").click(function(){
-                    $("#form_crear_nota").submit();
-                });
-                
-                $( "#btn_hecho_editar" ).button({
-                    icons: {
-                        primary: "ui-icon-disk"
-                    }
-                });
-                
-                $("#btn_hecho_editar").click(function(){
-                    $("#form_editar_nota").submit();
-                });
-                
-                $( "#btn_cancelar" ).button({
-                    icons: {
-                        primary: "ui-icon-cancel"
-                    }
-                });
-                
-   
-                
-                $("#nota_etiquetas").tagit({ 
-                    availableTags: [{%for etiqueta in etiquetas%} "{{ etiqueta.texto}}", {% endfor %}],
-                   
-                });
-                
-                
-                tituloBox.focus(function(){
-                    if($(this).attr("value") == tituloBox1Default) $(this).attr("value", "");
-                    $(this).addClass("nota-titulo-activo");
-                });
-                
-                tituloBox.blur(function(){
-                    $(this).removeClass("nota-titulo-activo");
-                    
-                        
-                }); 
-        $("#nota_texto").cleditor({
-                    controls: "bold italic underline strikethrough subscript superscript | font size " +
-                        "style | color highlight removeformat | bullets numbering | outdent " +
-                        "indent | alignleft center alignright justify | undo redo | " +
-                        "rule image link unlink | print source"
-                });
-   })
-
-    </script>
-{% endblock%}
-
-{% block stylesheets %}
-{{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/jamnotasfrontend/vendors/CLEditor1_3_0/jquery.cleditor.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/jamnotasfrontend/vendors/tagit/css/jquery.ui.autocomplete.custom.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/jamnotasfrontend/vendors/tagit/css/jquery.tagit.css') }}" />
-
-{% endblock %}
-
-
-{% block detalle_y_edicion %}
-
-    <div class="ui-layout-east">
-        <h3 class="ui-widget-header">Editar Nota</h3>
-
-        <div id="confirma-borrado"></div>
-
-        <div class="ui-widget my-widget">
-            <div class="ui-widget-content my-widget-content">
-                <span class="my-buttonset-left">
-                    <button id="btn_hecho_editar">hecho</button>
-                </span>
-
-                <span class="my-buttonset-right">
-                    <a id="btn_cancelar" href="{{ path('jamn_nota', {'id': nota_seleccionada.id}) }}">cancelar</a>
-                    <button id="btn_borrar" type="submit">Borrar</button>
-                    <form id="form_borrar" action="{{ path('jamn_borrar', { 'id': nota_seleccionada.id }) }}" method="post">
+            <span class="my-buttonset-right">
+                <a id="btn_cancelar" href="{{ path('jamn_nota', {'id': nota_seleccionada.id}) }}">cancelar</a>
+                <button id="btn_borrar" type="submit">Borrar</button>
+                <form id="form_borrar" action="{{ path('jamn_borrar', { 'id': nota_seleccionada.id }) }}" method="post">
                 {{ form_widget(delete_form) }}
-                        </form>
-                    </span>
-                </div>
+                    </form>
+                </span>
             </div>
+        </div>
 
-            <div class="separador"></div>
+        <div class="separador"></div>
 
-            <div class="ui-layout-content ui-widget-content">
-                <div class="ui-widget-content my-widget-content">
+        <div class="ui-layout-content ui-widget-content">
+            <div class="ui-widget-content my-widget-content">
 
-                    <form id="form_editar_nota" action="{{ path('jamn_editar', { 'id': nota_seleccionada.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+                <form id="form_editar_nota" action="{{ path('jamn_editar', { 'id': nota_seleccionada.id }) }}" method="post" {{ form_enctype(edit_form) }}>
 
                 {% if form_errors(edit_form) %}
-                        <div class="ui-state-error">{{ form_errors(edit_form) }}</div>
+                    <div class="ui-state-error">{{ form_errors(edit_form) }}</div>
                 {% endif %}
 
-                        <div class="row">
-                            <div style="font-size: small">Título:</div>
+                    <div class="row">
+                        <div style="font-size: small">Título:</div>
                         {% if form_errors(edit_form.titulo) %}
-                            <div style="width: 300px;" class="ui-state-error">{{ form_errors(edit_form.titulo) }}</div>
+                        <div style="width: 300px;" class="ui-state-error">{{ form_errors(edit_form.titulo) }}</div>
                         {% endif %}
 
                         {{ form_widget(edit_form.titulo, {'attr': {'class': 'nota-titulo ui-corner-all', 'style': 'width:300px;'} }) }}
+                    </div>
+
+                    <div class="row">
+                        <span style="font-size: small">Etiquetas:</span>
+
+
+                        <ul id="nota_etiquetas">
+                        {%for etiqueta in nota_seleccionada.etiquetas %}
+                                <li>{{ etiqueta.texto }}</li>
+                        {% endfor %}
+                            </ul>
                         </div>
 
                         <div class="row">
-                            <span style="font-size: small">Etiquetas:</span>
-
-
-                            <ul id="nota_etiquetas">
-                        {%for etiqueta in nota_seleccionada.etiquetas %}
-                                    <li>{{ etiqueta.texto }}</li>
-                        {% endfor %}
-                                </ul>
-                            </div>
-
-                            <div class="row">
                     {% if form_errors(edit_form.texto) %}
-                                    <div class="ui-state-error">{{ form_errors(edit_form.texto) }}</div>
+                                <div class="ui-state-error">{{ form_errors(edit_form.texto) }}</div>
                     {% endif %}
                     {{ form_widget(edit_form.texto) }}
 
-                                </div>
+                            </div>
 
-                                <div class="row">
-                                    <div>
-                                        <div style="font-size: small">Fichero:</div>
-                                        
+                            <div class="row">
+                                <div>
+                                    <div style="font-size: small">Fichero:</div>
+
                     {% if nota_seleccionada.path  %}
                     {% set urlFile = asset( nota_seleccionada.webPath(app.user.getUsername) ) %}
-                                        <a href="{{ urlFile }}">{{ nota_seleccionada.path}}</a>
+                                    <a href="{{ urlFile }}">{{ nota_seleccionada.path}}</a>
                     {% endif %}
-                                    </div>
                                 </div>
-                        
+                            </div>
+
                     {% if is_granted('ROLE_PREMIUM') %}
-                                <div class="row">
-                                    <div style="font-size: small">Cambiar Fichero:</div>
+                            <div class="row">
+                                <div style="font-size: small">Cambiar Fichero:</div>
                     {% if form_errors(edit_form.file) %}
-                                    <div class="ui-state-error">{{ form_errors(edit_form.file) }}</div>
+                                <div class="ui-state-error">{{ form_errors(edit_form.file) }}</div>
                     {% endif %}
                     {{ form_widget(edit_form.file) }}
                     {% endif %}
-                                </div>
-                    
+                            </div>
+
                 {{ form_widget(edit_form._token) }}
 
-                            </form>
-                        </div>
+                        </form>
                     </div>
                 </div>
-
-
-
-{% endblock %}
+            </div>
