@@ -14,8 +14,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\UsuarioRepository")
  */
-class Usuario implements AdvancedUserInterface
-{
+class Usuario implements AdvancedUserInterface {
 
     /**
      * @var integer $id
@@ -106,7 +105,35 @@ class Usuario implements AdvancedUserInterface
      * @ORM\Column(name="tokenRegistro", type="string", length=255)
      */
     private $tokenRegistro;
+    /////
+    /**
+     * @var string $password_again
+     * 
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(255)
+     * @Assert\Regex(
+     *     pattern="/^[\w-]+$/",
+     *     message="El password no puede contener más que caracteres alfanuméricos y guiones")
+     */
+    private $password_again;
 
+    /**
+     * Set password
+     *
+     * @param string $password
+     */
+    public function setPasswordAgain($password) {
+        $this->password_again = $password;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string 
+     */
+    public function getPasswordAgain() {
+        return $this->password_again;
+    }
 
     ////ASOCIACIONES////
 
@@ -132,8 +159,7 @@ class Usuario implements AdvancedUserInterface
 
     ////FIN ASOCIACIONES////
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->notas = new ArrayCollection();
         $this->contratos = new ArrayCollection();
         $this->etiquetas = new ArrayCollection();
@@ -145,8 +171,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -155,8 +180,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @param string $nombre
      */
-    public function setNombre($nombre)
-    {
+    public function setNombre($nombre) {
         $this->nombre = $nombre;
     }
 
@@ -165,8 +189,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @return string 
      */
-    public function getNombre()
-    {
+    public function getNombre() {
         return $this->nombre;
     }
 
@@ -175,8 +198,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @param string $apellidos
      */
-    public function setApellidos($apellidos)
-    {
+    public function setApellidos($apellidos) {
         $this->apellidos = $apellidos;
     }
 
@@ -185,8 +207,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @return string 
      */
-    public function getApellidos()
-    {
+    public function getApellidos() {
         return $this->apellidos;
     }
 
@@ -195,8 +216,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @param string $salt
      */
-    public function setSalt($salt)
-    {
+    public function setSalt($salt) {
         $this->salt = $salt;
     }
 
@@ -205,8 +225,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @return string 
      */
-    public function getSalt()
-    {
+    public function getSalt() {
         return $this->salt;
     }
 
@@ -215,8 +234,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @param string $username
      */
-    public function setUsername($username)
-    {
+    public function setUsername($username) {
         $this->username = $username;
     }
 
@@ -225,8 +243,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @return string 
      */
-    public function getUsername()
-    {
+    public function getUsername() {
         return $this->username;
     }
 
@@ -235,8 +252,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @param string $password
      */
-    public function setPassword($password)
-    {
+    public function setPassword($password) {
         $this->password = $password;
     }
 
@@ -245,8 +261,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @return string 
      */
-    public function getPassword()
-    {
+    public function getPassword() {
         return $this->password;
     }
 
@@ -255,8 +270,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @param string $email
      */
-    public function setEmail($email)
-    {
+    public function setEmail($email) {
         $this->email = $email;
     }
 
@@ -265,8 +279,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @return string 
      */
-    public function getEmail()
-    {
+    public function getEmail() {
         return $this->email;
     }
 
@@ -275,8 +288,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @param boolean $isActive
      */
-    public function setIsActive($isActive)
-    {
+    public function setIsActive($isActive) {
         $this->isActive = $isActive;
     }
 
@@ -285,8 +297,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @return boolean 
      */
-    public function getIsActive()
-    {
+    public function getIsActive() {
         return $this->isActive;
     }
 
@@ -295,8 +306,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @param string $tokenRegistro
      */
-    public function setTokenRegistro($tokenRegistro)
-    {
+    public function setTokenRegistro($tokenRegistro) {
         $this->tokenRegistro = $tokenRegistro;
     }
 
@@ -305,8 +315,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @return string 
      */
-    public function getTokenRegistro()
-    {
+    public function getTokenRegistro() {
         return $this->tokenRegistro;
     }
 
@@ -315,8 +324,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @param Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Nota $notas
      */
-    public function addNota(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Nota $notas)
-    {
+    public function addNota(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Nota $notas) {
         $this->notas[] = $notas;
     }
 
@@ -325,8 +333,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getNotas()
-    {
+    public function getNotas() {
         return $this->notas;
     }
 
@@ -335,8 +342,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @param Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Contrato $contratos
      */
-    public function addContrato(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Contrato $contratos)
-    {
+    public function addContrato(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Contrato $contratos) {
         $this->contratos[] = $contratos;
     }
 
@@ -345,8 +351,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getContratos()
-    {
+    public function getContratos() {
         return $this->contratos;
     }
 
@@ -355,8 +360,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @param Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Etiqueta $etiquetas
      */
-    public function addEtiqueta(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Etiqueta $etiquetas)
-    {
+    public function addEtiqueta(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Etiqueta $etiquetas) {
         $this->etiquetas[] = $etiquetas;
     }
 
@@ -365,8 +369,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getEtiquetas()
-    {
+    public function getEtiquetas() {
         return $this->etiquetas;
     }
 
@@ -375,8 +378,7 @@ class Usuario implements AdvancedUserInterface
      *
      * @param Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Grupo $grupos
      */
-    public function addGrupo(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Grupo $grupos)
-    {
+    public function addGrupo(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Grupo $grupos) {
         $this->grupos[] = $grupos;
     }
 
@@ -385,49 +387,40 @@ class Usuario implements AdvancedUserInterface
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getGrupos()
-    {
+    public function getGrupos() {
         return $this->grupos;
     }
 
-    public function eraseCredentials()
-    {
+    public function eraseCredentials() {
         
     }
 
-    function equals(UserInterface $user)
-    {
+    function equals(UserInterface $user) {
         return $user->getUsername() === $this->username;
     }
 
-    public function getRoles()
-    {
+    public function getRoles() {
         $roles = array();
-        foreach ($this->grupos as $g)
-        {
+        foreach ($this->grupos as $g) {
             $roles[] = $g->getRol();
         }
 
         return $roles;
     }
 
-    public function isAccountNonExpired()
-    {
+    public function isAccountNonExpired() {
         return true;
     }
 
-    public function isAccountNonLocked()
-    {
+    public function isAccountNonLocked() {
         return true;
     }
 
-    public function isCredentialsNonExpired()
-    {
+    public function isCredentialsNonExpired() {
         return true;
     }
 
-    public function isEnabled()
-    {
+    public function isEnabled() {
         return $this->getIsActive();
     }
 
