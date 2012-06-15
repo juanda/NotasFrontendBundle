@@ -8,11 +8,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Usuario
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\UsuarioRepository")
+ * 
+ * @UniqueEntity("email")
+ * @UniqueEntity("username")
  */
 class Usuario implements AdvancedUserInterface {
 
@@ -422,6 +427,13 @@ class Usuario implements AdvancedUserInterface {
 
     public function isEnabled() {
         return $this->getIsActive();
+    }
+
+    /**
+     * @Assert\True(message = "Has escrito dos password distintos")
+     */
+    public function isPasswordOK() {
+        return ($this->password === $this->password_again);
     }
 
 }

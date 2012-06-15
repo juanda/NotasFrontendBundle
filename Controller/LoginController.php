@@ -32,13 +32,34 @@ class LoginController extends Controller {
         if ($request->getMethod() == "POST") {
             $form->bindRequest($request);
             if ($form->isValid()) {
-                $mentorNotasService = $this->get('jazzyweb_mentor_notas_service');
-                $mentorNotasService->registra($usuario);
+                $serviceRegistro = $this->get('jam_notas_frontend.registro');
+                $serviceRegistro->registra($usuario, $form->get('password')->getData());
 
-                return $this->render('JazzywebMentorNotasBundle:Registro:registrosuccess.html.twig', array('usuario' => $usuario));
+                return $this->render('JAMNotasFrontendBundle:Login:registro_success.html.twig', array('usuario' => $usuario));
             }
         }
 
         return $this->render('JAMNotasFrontendBundle:Login:registro.html.twig', array('form' => $form->createView()));
+    }
+        
+    public function activarAction()
+    {
+        $request = $this->getRequest();
+        
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $usuario = $em->getRepository('JAMNotasFrontendBundle:Usuario')
+                ->findOneByTokenRegistro($request->get('token'));
+
+        if (!$usuario) {
+            throw $this->createNotFoundException('Usuario no registrado');
+        }
+        
+        $usuario->setIsActive(true);        
+        $em->persist($usuario);
+        
+        $em->flush();
+
+        return $this->render('JAMNotasFrontendBundle:Login:activar_success.html.twig', array('usuario' => $usuario));
     }
 }
