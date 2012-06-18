@@ -16,7 +16,7 @@ class Registro {
         $usuario->setTokenRegistro(substr(md5(uniqid(rand(), true)), 0, 32));
 
         $em = $this->doctrine->getEntityManager();
-
+        
         $grupo = $em->getRepository('JAMNotasFrontendBundle:Grupo')
                 ->findOneByRol('ROLE_REGISTRADO');
         

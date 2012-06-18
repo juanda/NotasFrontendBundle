@@ -204,4 +204,9 @@ class Tarifa
     {
         return $this->contratos;
     }
+    
+    public function __toString()
+    {
+        return $this->getNombre();
+    }
 }

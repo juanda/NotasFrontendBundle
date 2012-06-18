@@ -5,15 +5,13 @@ namespace Jazzyweb\AulasMentor\NotasFrontendBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-
 /**
  * Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Grupo
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\GrupoRepository")
  */
-class Grupo
-{
+class Grupo {
 
     /**
      * @var integer $id
@@ -47,8 +45,7 @@ class Grupo
 
     ////FIN ASOCIACIONES////
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->usuarios = new ArrayCollection();
     }
 
@@ -57,8 +54,7 @@ class Grupo
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -67,8 +63,7 @@ class Grupo
      *
      * @param string $nombre
      */
-    public function setNombre($nombre)
-    {
+    public function setNombre($nombre) {
         $this->nombre = $nombre;
     }
 
@@ -77,8 +72,7 @@ class Grupo
      *
      * @return string 
      */
-    public function getNombre()
-    {
+    public function getNombre() {
         return $this->nombre;
     }
 
@@ -87,8 +81,7 @@ class Grupo
      *
      * @param string $rol
      */
-    public function setRol($rol)
-    {
+    public function setRol($rol) {
         $this->rol = $rol;
     }
 
@@ -97,19 +90,16 @@ class Grupo
      *
      * @return string 
      */
-    public function getRol()
-    {
+    public function getRol() {
         return $this->rol;
     }
-
 
     /**
      * Add usuarios
      *
      * @param Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Usuario $usuarios
      */
-    public function addUsuario(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Usuario $usuarios)
-    {
+    public function addUsuario(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Usuario $usuarios) {
         $this->usuarios[] = $usuarios;
     }
 
@@ -118,8 +108,13 @@ class Grupo
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getUsuarios()
-    {
+    public function getUsuarios() {
         return $this->usuarios;
     }
+    
+    public function __toString()
+    {
+        return $this->getNombre();
+    }
+
 }

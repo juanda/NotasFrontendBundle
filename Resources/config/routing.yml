@@ -106,3 +106,7 @@ jamn_EVF_form_usuario:
 jamn_EVF_form_upload:
  pattern: /estudio_valyforms/form_upload
  defaults: { _controller: JAMNotasFrontendBundle:EstudioValidacionYFormulario:formUpload } 
+
+JAMNotasFrontendBundle_tarifa:
+ resource: "@JAMNotasFrontendBundle/Resources/config/routing/tarifa.yml"
+ prefix:   /tarifa

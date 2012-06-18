@@ -140,4 +140,9 @@ class Contrato
     {
         return $this->usuario;
     }
+    
+    public function __toString()
+    {
+        return $this->getReferencia();
+    }
 }

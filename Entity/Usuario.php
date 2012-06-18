@@ -435,5 +435,10 @@ class Usuario implements AdvancedUserInterface {
     public function isPasswordOK() {
         return ($this->password === $this->password_again);
     }
+    
+    public function __toString()
+    {
+        return $this->getNombre().' '.$this->getApellidos();
+    }
 
 }
