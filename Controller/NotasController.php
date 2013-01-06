@@ -186,7 +186,6 @@ class NotasController extends Controller {
 
         $usuario = $this->get('security.context')->getToken()->getUser();
 
-
         $busqueda_tipo = $session->get('busqueda.tipo');
 
         $busqueda_valor = $session->get('busqueda.valor');

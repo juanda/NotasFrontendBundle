@@ -6,8 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -19,7 +19,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity("email")
  * @UniqueEntity("username")
  */
-class Usuario implements AdvancedUserInterface {
+class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterface {
 
     /**
      * @var integer $id
@@ -50,7 +50,7 @@ class Usuario implements AdvancedUserInterface {
     /**
      * @var string $salt
      *
-     * @ORM\Column(name="salt", type="string", length=255)
+     * @ORM\Column(name="salt", type="string", length=255, nullable=true)
      * 
      * @Assert\MaxLength(255)
      */
@@ -107,7 +107,7 @@ class Usuario implements AdvancedUserInterface {
     /**
      * @var string $tokenRegistro
      *
-     * @ORM\Column(name="tokenRegistro", type="string", length=255)
+     * @ORM\Column(name="tokenRegistro", type="string", length=255, nullable=true)
      */
     private $tokenRegistro;
     /////
@@ -400,10 +400,6 @@ class Usuario implements AdvancedUserInterface {
         
     }
 
-    function equals(UserInterface $user) {
-        return $user->getUsername() === $this->username;
-    }
-
     public function getRoles() {
         $roles = array();
         foreach ($this->grupos as $g) {
@@ -426,7 +422,7 @@ class Usuario implements AdvancedUserInterface {
     }
 
     public function isEnabled() {
-        return $this->getIsActive();
+        return $this->isActive;
     }
 
     /**
@@ -435,10 +431,67 @@ class Usuario implements AdvancedUserInterface {
     public function isPasswordOK() {
         return ($this->password === $this->password_again);
     }
-    
-    public function __toString()
-    {
-        return $this->getNombre().' '.$this->getApellidos();
+
+    public function __toString() {
+        return $this->getNombre() . ' ' . $this->getApellidos();
+    }
+
+    /**
+     * Remove notas
+     *
+     * @param \Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Nota $notas
+     */
+    public function removeNota(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Nota $notas) {
+        $this->notas->removeElement($notas);
+    }
+
+    /**
+     * Remove contratos
+     *
+     * @param \Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Contrato $contratos
+     */
+    public function removeContrato(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Contrato $contratos) {
+        $this->contratos->removeElement($contratos);
+    }
+
+    /**
+     * Remove etiquetas
+     *
+     * @param \Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Etiqueta $etiquetas
+     */
+    public function removeEtiqueta(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Etiqueta $etiquetas) {
+        $this->etiquetas->removeElement($etiquetas);
+    }
+
+    /**
+     * Remove grupos
+     *
+     * @param \Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Grupo $grupos
+     */
+    public function removeGrupo(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Grupo $grupos) {
+        $this->grupos->removeElement($grupos);
+    }
+
+    /**
+     * @see \Serializable::serialize()
+     */
+    public function serialize() {
+        return serialize(array(
+            $this->id,
+                ));
+    }
+
+    /**
+     * @see \Serializable::unserialize()
+     */
+    public function unserialize($serialized) {
+        list (
+                $this->id,
+                ) = unserialize($serialized);
+    }
+
+    public function isEqualTo(UserInterface $user) {
+        return $this->username === $user->getUsername();
     }
 
 }

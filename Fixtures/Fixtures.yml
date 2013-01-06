@@ -1,0 +1,37 @@
+Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Grupo:
+  grupo1:
+    nombre: registrado
+    rol: ROLE_REGISTRADO
+  grupo2:
+    nombre: premium
+    rol: ROLE_PREMIUM
+  grupo3:
+    nombre: admin
+    rol: ROLE_ADMIN
+
+Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Usuario:
+  usuario{1..10}:
+        nombre: <firstName()>
+        apellidos: <lastName()>
+        username: <username()>
+        password: pruebas
+        email: <email()>
+        isActive: 1
+        grupos: [@grupo1]
+  usuario{11..20}:
+        nombre: <firstName()>
+        apellidos: <lastName()>
+        username: <username()>
+        password: pruebas
+        email: <email()>
+        isActive: 1
+        grupos: [@grupo2]
+  usuario{21..30}:
+        nombre: <firstName()>
+        apellidos: <lastName()>
+        username: <username()>
+        password: pruebas
+        email: <email()>
+        isActive: 1
+        grupos: [@grupo3]
+  

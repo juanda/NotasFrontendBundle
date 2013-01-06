@@ -119,4 +119,14 @@ class Etiqueta
     {
         return $this->usuario;
     }
+
+    /**
+     * Remove notas
+     *
+     * @param \Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Nota $notas
+     */
+    public function removeNota(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Nota $notas)
+    {
+        $this->notas->removeElement($notas);
+    }
 }

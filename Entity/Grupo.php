@@ -117,4 +117,14 @@ class Grupo {
         return $this->getNombre();
     }
 
+
+    /**
+     * Remove usuarios
+     *
+     * @param \Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Usuario $usuarios
+     */
+    public function removeUsuario(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Usuario $usuarios)
+    {
+        $this->usuarios->removeElement($usuarios);
+    }
 }

@@ -36,21 +36,21 @@ class Nota {
     /**
      * @var text $texto
      *
-     * @ORM\Column(name="texto", type="text", nullable="true")
+     * @ORM\Column(name="texto", type="text", nullable=true)
      */
     private $texto;
 
     /**
      * @var datetime $fecha
      *
-     * @ORM\Column(name="fecha", type="datetime", nullable="true")
+     * @ORM\Column(name="fecha", type="datetime", nullable=true)
      */
     private $fecha;
 
     /**
      * @var string $path
      *
-     * @ORM\Column(name="path", type="string", length=255, nullable="true")
+     * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
     private $path;
 
@@ -233,4 +233,14 @@ class Nota {
         $this->file = null;
     }
 
+
+    /**
+     * Remove etiquetas
+     *
+     * @param \Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Etiqueta $etiquetas
+     */
+    public function removeEtiqueta(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Etiqueta $etiquetas)
+    {
+        $this->etiquetas->removeElement($etiquetas);
+    }
 }

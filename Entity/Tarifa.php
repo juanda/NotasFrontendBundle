@@ -48,14 +48,14 @@ class Tarifa
     /**
      * @var date $validoDesde
      *
-     * @ORM\Column(name="validoDesde", type="date", nullable="true")
+     * @ORM\Column(name="validoDesde", type="date", nullable=true)
      */
     private $validoDesde;
 
     /**
      * @var date $validoHasta
      *
-     * @ORM\Column(name="validoHasta", type="date", nullable="true")
+     * @ORM\Column(name="validoHasta", type="date", nullable=true)
      */
     private $validoHasta;
 
@@ -208,5 +208,15 @@ class Tarifa
     public function __toString()
     {
         return $this->getNombre();
+    }
+
+    /**
+     * Remove contratos
+     *
+     * @param \Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Contrato $contratos
+     */
+    public function removeContrato(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Contrato $contratos)
+    {
+        $this->contratos->removeElement($contratos);
     }
 }
