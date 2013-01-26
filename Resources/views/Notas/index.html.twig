@@ -2,11 +2,12 @@
 
   {% block detalle_y_edicion %}
 
-
-<div class="ui-layout-east">
-    <h3 class="ui-widget-header">Nota</h3>
-
-    {% if nota_seleccionada %}
+<div class="span6">
+    <div class="well sidebar-nav">
+        <ul class="nav nav-list">
+            <li class="nav-header">Detalle Nota</li>  
+        </ul>
+        {% if nota_seleccionada %}
 
     <div id="confirma-borrado"></div>
 
@@ -65,7 +66,12 @@
                         </div>
                     </div>
     {% endif %}
-                </div>
+    </div>
+</div>
+
+
+
+    
 
 
   {% endblock %}

@@ -1,53 +1,42 @@
-<div class="ui-layout-center">
+<div class="span4">
+    <div class="well sidebar-nav">
 
-    <h3 class="ui-widget-header">Listado de notas</h3>
-
-
-    <div class="ui-widget my-widget">
-        <div class="ui-widget-content my-widget-content">
-
-            <form id="form_buscar" action="{{ path("jamn_buscar") }}" method="post">
-                <input class="buscar ui-corner-all" size="20" name="termino" id="termino"/>
-                <button type=submit" class="btn_buscar"> Buscar</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="separador"></div>
-
-
-    <div class="ui-layout-content ui-widget-content">
-        <div class="ui-widget-content my-widget-content">
-
-                {% for nota in notas %}
+        <ul class="nav nav-list">
+            <li class="nav-header">Notas</li>    
+            <li>
+                <form id="form_buscar" action="{{ path("jamn_buscar") }}" method="post">
+                    <input class="buscar ui-corner-all" size="20" name="termino" id="termino"/>
+                    <button type=submit" class="btn_buscar"> Buscar</button>
+                </form>
+            </li>
+            <li class="divider"></li>
+            {% for nota in notas %}
                 {% if nota.id == nota_seleccionada.id %}
-            <div class="nota seleccionada">
+            <li class="active nota">
                 {% else %}
-                    <div class="nota">
+                <li class="nota">
                 {% endif %}
-                            <a href="{{ path('jamn_nota',{"id": nota.id}) }}">
-                                <div class="nota-container">
-                                    <div class="nota-titulo">
-                            {{ nota.titulo }}
-                                        </div>
-                                        <div class="nota-content">
-                                            <span class="nota-fecha"> {{ nota.fecha.date }}</span>
-                            {{ nota.texto|raw }}
-
-                                        </div>
+                        <a href="{{ path('jamn_nota',{"id": nota.id}) }}">
+                            <div class="nota-container">
+                                <div class="nota-titulo">
+                  {{ nota.titulo }}
                                     </div>
-                                </a>
-                            </div>
-
+                                    <div class="nota-content">
+                                        <span class="nota-fecha"> {{ nota.fecha.date }}</span>
+                {{ nota.texto|raw }}
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
                 {% else %}
-                            <div class="ui-state-highlight">
-                                <span class="ui-icon ui-icon-alert" style="float:left;"></span>
-                                <span style="padding: 0.5em;"> No se han encontrado notas</span></div>
-                {% endfor %}
+                        <div class="ui-state-highlight">
+                            <span class="ui-icon ui-icon-alert" style="float:left;"></span>
+                            <span style="padding: 0.5em;"> No se han encontrado notas</span></div>
+            {% endfor %}
 
-                        </div>
-                    </div>
+                    </ul>
+                </div><!--/.well -->
+            </div><!--/span-->
 
-                </div>
 
-            </div>
+

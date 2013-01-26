@@ -16,7 +16,7 @@ btnLogout.click(function(){
      window.location = '{{ path('jamn_logout') }}';
 });
    
-</script>
+    </script>
 {% endblock %}
 
 
@@ -24,12 +24,15 @@ btnLogout.click(function(){
 
     {% include 'JAMNotasFrontendBundle:Notas:cabecera.html.twig' %}
 
+    <div class="container-fluid">
+        <div class="row-fluid">
     {% include 'JAMNotasFrontendBundle:Notas:etiquetas.html.twig' %}
 
     {% include 'JAMNotasFrontendBundle:Notas:notas.html.twig' %}
 
-    {% include 'JAMNotasFrontendBundle:Notas:pie.html.twig' %}  
-
     {% block detalle_y_edicion %} {% endblock %}
+    {% include 'JAMNotasFrontendBundle:Notas:pie.html.twig' %}
+        </div>
+    </div>
 
 {% endblock %} 
