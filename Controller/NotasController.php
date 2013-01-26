@@ -211,10 +211,11 @@ class NotasController extends Controller {
             $nota_selecionada_id = $session->get('nota.seleccionada.id');
             if (!is_null($nota_selecionada_id) && $nota_selecionada_id != '') {
                 $nota_seleccionada = $em->getRepository('JAMNotasFrontendBundle:Nota')->
-                        findOneById($nota_selecionada_id);
+                        findOneById($nota_selecionada_id);                
             } else {
-                $nota_seleccionada = $notas[0];
+                $nota_seleccionada = $notas[0];                
             }
+            $nota_seleccionada->setSelected(true);
         }
 
         return array($etiquetas, $notas, $nota_seleccionada);

@@ -11,32 +11,30 @@
             </li>
             <li class="divider"></li>
             {% for nota in notas %}
-                {% if nota.id == nota_seleccionada.id %}
-            <li class="active nota">
-                {% else %}
-                <li class="nota">
-                {% endif %}
-                        <a href="{{ path('jamn_nota',{"id": nota.id}) }}">
-                            <div class="nota-container">
-                                <div class="nota-titulo">
+                
+            <li class="{{ nota.selected? 'active' : '' }}">                
+              <a href="{{ path('jamn_nota',{"id": nota.id}) }}">
+                  <div class="nota-container">
+                     <div class="nota-titulo">
                   {{ nota.titulo }}
-                                    </div>
-                                    <div class="nota-content">
-                                        <span class="nota-fecha"> {{ nota.fecha.date }}</span>
-                {{ nota.texto|raw }}
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
+                     </div>
+                     <div class="nota-content">
+                        <span class="nota-fecha"> {{ nota.fecha.date }}</span>
+                        {{ nota.texto|raw }}
+                     </div>
+                  </div>
+             </a>
+           </li>
+           <li class="divider"></li>
                 {% else %}
-                        <div class="ui-state-highlight">
-                            <span class="ui-icon ui-icon-alert" style="float:left;"></span>
-                            <span style="padding: 0.5em;"> No se han encontrado notas</span></div>
+                <div class="ui-state-highlight">
+                    <span class="ui-icon ui-icon-alert" style="float:left;"></span>
+                    <span style="padding: 0.5em;"> No se han encontrado notas</span></div>
             {% endfor %}
-
-                    </ul>
-                </div><!--/.well -->
-            </div><!--/span-->
+                        
+           </ul>
+         </div><!--/.well -->
+      </div><!--/span-->
 
 
 

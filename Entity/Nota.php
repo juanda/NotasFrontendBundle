@@ -53,6 +53,8 @@ class Nota {
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
     private $path;
+    
+    private $isSelected=false;
 
     /**
      * @Assert\File(maxSize="6000000")
@@ -194,6 +196,13 @@ class Nota {
         return $this->etiquetas;
     }
 
+    public function setSelected($sel){
+        $this->isSelected = true;
+    }
+    
+    public function getSelected(){
+        return $this->isSelected;
+    }
     public function getAbsolutePath($usuario = null) {
         return null === $this->path ? null : $this->getUploadRootDir($usuario) . '/' . $this->path;
     }
