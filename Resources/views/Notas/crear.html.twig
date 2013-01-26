@@ -40,31 +40,31 @@
 
 
                     <ul id="nota_etiquetas">
-                        
-                    </ul>
-                    </div>
 
-                    <div class="row">
+                    </ul>
+                </div>
+
+                <div class="row">
                     {% if form_errors(new_form.texto) %}
-                            <div class="ui-state-error">{{ form_errors(new_form.texto) }}</div>
+                        <div class="ui-state-error">{{ form_errors(new_form.texto) }}</div>
                     {% endif %}
                     {{ form_widget(new_form.texto) }}
 
-                        </div>                            
+                    </div>                            
 
                     {% if is_granted('ROLE_PREMIUM') %}
-                        <div class="row">
-                            <div style="font-size: small">Cambiar Fichero:</div>
+                    <div class="row">
+                        <div style="font-size: small">Cambiar Fichero:</div>
                     {% if form_errors(new_form.file) %}
-                            <div class="ui-state-error">{{ form_errors(new_form.file) }}</div>
+                        <div class="ui-state-error">{{ form_errors(new_form.file) }}</div>
                     {% endif %}
                     {{ form_widget(new_form.file) }}
                     {% endif %}
-                        </div>
+                    </div>
 
                 {{ form_widget(new_form._token) }}
 
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
+    </div>

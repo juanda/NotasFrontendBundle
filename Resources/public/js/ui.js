@@ -49,9 +49,9 @@ $(document).ready( function() {
                                         
                               
     var searchBox1 = $("#txt_buscar");  
-    var botonSalir = $("#btn_salir");
+    var btnLogout = $("#btn_logout");
     var searchBox1Default = "Buscar notas ...";  
-                                    
+                                        
     searchBox1.attr("value", searchBox1Default);
     searchBox1.focus(function(){  
         if($(this).attr("value") == searchBox1Default) $(this).attr("value", ""); 
@@ -61,15 +61,7 @@ $(document).ready( function() {
         $(this).removeClass("activo");
                         
     });  
-    
-    botonSalir.hover(
-        function(){ 
-            $(this).addClass("salir-hover"); 
-        },
-        function(){ 
-            $(this).removeClass("salir-hover"); 
-        }
-        );
+       
       
       
     /**

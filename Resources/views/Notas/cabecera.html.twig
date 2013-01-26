@@ -1,34 +1,59 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="#">ColabNotes</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav pull-right">
+                    <li class="navbar-text">
+                        Logged in como <b>{{ app.user.nombre }} {{app.user.apellidos }}</b>
+                    </li>
+                    <li class="divider-vertical"></li>
+                    <li>
+                        <button id="btn_logout" class="btn btn-danger"><i class="icon-off"></i></button>
+                    </li>
+                </ul>
+                                                 
+                <ul class="nav">
+                    <li class="active"><a href="#">Inicio</a></li>
+                    <li><a href="#about">Acerca de</a></li>
+                    <li><a href="#contact">Contacto</a></li>
+                    
+                    {% if is_granted('ROLE_PREMIUM') %}
+                    <li><a href="{{ path('jamn_espacio_premium') }}">Cuenta Premium</a></li>
+                    {% else %}
+                    <li><a href="{{ path('jamn_contratar') }}">Contratar Premium</a></li>                    
+                    {% endif %}
+                </ul>
+                
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+
+
 <div class="ui-layout-north ui-widget-content" >
 
     <div class="banner">
         {% if not is_granted('ROLE_PREMIUM') %}
-        <span style="font-size: xx-large">
-            PUBLICIDAD       
-        </span>
-        <a class="ui-button usuario-tool premium ui-corner-all" href="{{ path('jamn_contratar') }}">
-            contrata premium, elimina la publicidad y obten numerosas ventajas!
-        </a>
+            <span style="font-size: xx-large">
+                PUBLICIDAD       
+            </span>
+            <a class="ui-button usuario-tool premium ui-corner-all" href="{{ path('jamn_contratar') }}">
+                contrata premium, elimina la publicidad y obten numerosas ventajas!
+            </a>
         {% else %}
-        <span style="font-size: xx-large">
-            BOTONERA PREMIUM       
-        </span>
-        <a class="ui-button usuario-tool premium ui-corner-all" href="{{ path('jamn_espacio_premium') }}">
-            Mi espacio premium
-        </a>
+            <span style="font-size: xx-large">
+                BOTONERA PREMIUM       
+            </span>
+            <a class="ui-button usuario-tool premium ui-corner-all" href="{{ path('jamn_espacio_premium') }}">
+                Mi espacio premium
+            </a>
         {% endif %}
-    </div>
-
-    <div class="logo">
-        <span>MentorNotas</span>
-        <img style="float:left;" height="60" src="{{ asset('bundles/jamnotasfrontend/images/mentor.png')}}"></img>
+        </div>
 
     </div>
-
-    <div class="signout">
-        <span class="usuario-nombre">{{ app.user.nombre }} {{app.user.apellidos }}</span>
-        <a id="btn_salir" class="ui-button ui-button-text-icon-primary usuario-tool salir ui-corner-all" href="{{path('jamn_logout')}}">
-            <span class="ui-button-icon-primary ui-icon ui-icon-power"></span>
-            <span class="ui-button-text">salir</span></a>
-    </div>
-
-</div>
