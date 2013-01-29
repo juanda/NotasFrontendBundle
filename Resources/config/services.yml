@@ -1,7 +1,13 @@
 parameters:
     jam_notas_frontend.registro.class: Jazzyweb\AulasMentor\NotasFrontendBundle\Services\Registro
-
+    jam_notas_frontend.utils.class: Jazzyweb\AulasMentor\NotasFrontendBundle\Services\Utils
+    jam_notas_frontend.length.short.string: 160
+   
 services:
+    jam_notas_frontend.utils:
+        class: %jam_notas_frontend.utils.class%
+        arguments: [ %jam_notas_frontend.length.short.string% ]
+        
     jam_notas_frontend.registro:
         class: %jam_notas_frontend.registro.class%
         arguments:

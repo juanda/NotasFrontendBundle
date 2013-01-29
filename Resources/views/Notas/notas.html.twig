@@ -8,28 +8,24 @@
                     <input class="buscar ui-corner-all" size="20" name="termino" id="termino"/>
                     <button type=submit" class="btn_buscar"> Buscar</button>
                 </form>
+                <p class="text-success">
+                {% if notas|length > 0 %}
+                {{ notas | length }} notas encontradas
+                {% endif %}
+                </p>
             </li>
             <li class="divider"></li>
             {% for nota in notas %}
                 
-            <li class="{{ nota.selected? 'active' : '' }}">                
+            <li class="{{ nota.selected? 'active' :   '' }}">                
               <a href="{{ path('jamn_nota',{"id": nota.id}) }}">
-                  <div class="nota-container">
-                     <div class="nota-titulo">
-                  {{ nota.titulo }}
-                     </div>
-                     <div class="nota-content">
-                        <span class="nota-fecha"> {{ nota.fecha.date }}</span>
-                        {{ nota.texto|raw }}
-                     </div>
-                  </div>
+                 <h6>{{ nota.titulo }}, <em>{{ nota.fecha.date }}</em></h6>
+                 <small> {{ nota.texto | length < 80 ? nota.texto : nota.texto|raw|slice(0,80) ~ '...' }}</small>
              </a>
            </li>
-           <li class="divider"></li>
-                {% else %}
-                <div class="ui-state-highlight">
-                    <span class="ui-icon ui-icon-alert" style="float:left;"></span>
-                    <span style="padding: 0.5em;"> No se han encontrado notas</span></div>
+           <li class="divider"></li>                                   
+            {% else %}                
+           <p class="text-error">No se han encontrado notas</p>
             {% endfor %}
                         
            </ul>

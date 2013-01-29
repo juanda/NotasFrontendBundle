@@ -1,87 +1,51 @@
-<div class="ui-layout-east">
-    <h3 class="ui-widget-header">Editar Nota</h3>
+<div id="confirma-borrado"></div>
+<button id="btn_hecho_editar">hecho</button>
+<a id="btn_cancelar" href="{{ path('jamn_nota', {'id': nota_seleccionada.id}) }}">cancelar</a>
+<button id="btn_borrar" type="submit">Borrar</button>
+<form id="form_borrar" action="{{ path('jamn_borrar', { 'id': nota_seleccionada.id }) }}" method="post">
+    {{ form_widget(delete_form) }}
+</form>
+         
+<form id="form_editar_nota" action="{{ path('jamn_editar', { 'id': nota_seleccionada.id }) }}" method="post" {{ form_enctype(edit_form) }}>
 
-    <div id="confirma-borrado"></div>
+{% if form_errors(edit_form) %}
+<div class="ui-state-error">{{ form_errors(edit_form) }}</div>
+{% endif %}
 
-    <div class="ui-widget my-widget">
-        <div class="ui-widget-content my-widget-content">
-            <span class="my-buttonset-left">
-                <button id="btn_hecho_editar">hecho</button>
-            </span>
+<div style="font-size: small">Título:</div>
+{% if form_errors(edit_form.titulo) %}
+<div style="width: 300px;" class="ui-state-error">{{ form_errors(edit_form.titulo) }}</div>
+{% endif %}
 
-            <span class="my-buttonset-right">
-                <a id="btn_cancelar" href="{{ path('jamn_nota', {'id': nota_seleccionada.id}) }}">cancelar</a>
-                <button id="btn_borrar" type="submit">Borrar</button>
-                <form id="form_borrar" action="{{ path('jamn_borrar', { 'id': nota_seleccionada.id }) }}" method="post">
-                {{ form_widget(delete_form) }}
-                    </form>
-                </span>
-            </div>
-        </div>
+{{ form_widget(edit_form.titulo, {'attr': {'class': 'nota-titulo ui-corner-all', 'style': 'width:300px;'} }) }}
 
-        <div class="separador"></div>
+<span style="font-size: small">Etiquetas:</span>
+<ul id="nota_etiquetas">
+{%for etiqueta in nota_seleccionada.etiquetas %}
+   <li>{{ etiqueta.texto }}</li>
+{% endfor %}
+</ul>
 
-        <div class="ui-layout-content ui-widget-content">
-            <div class="ui-widget-content my-widget-content">
+{% if form_errors(edit_form.texto) %}
+<div class="ui-state-error">{{ form_errors(edit_form.texto) }}</div>
+{% endif %}
 
-                <form id="form_editar_nota" action="{{ path('jamn_editar', { 'id': nota_seleccionada.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+{{ form_widget(edit_form.texto) }}
 
-                {% if form_errors(edit_form) %}
-                    <div class="ui-state-error">{{ form_errors(edit_form) }}</div>
-                {% endif %}
+<div style="font-size: small">Fichero:</div>
+{% if nota_seleccionada.path  %}
+{% set urlFile = asset( nota_seleccionada.webPath(app.user.getUsername) ) %}
+<a href="{{ urlFile }}">{{ nota_seleccionada.path}}</a>
+{% endif %}
+{% if is_granted('ROLE_PREMIUM') %}
+<div style="font-size: small">Cambiar Fichero:</div>
 
-                    <div class="row">
-                        <div style="font-size: small">Título:</div>
-                        {% if form_errors(edit_form.titulo) %}
-                        <div style="width: 300px;" class="ui-state-error">{{ form_errors(edit_form.titulo) }}</div>
-                        {% endif %}
+{% if form_errors(edit_form.file) %}
+<div class="ui-state-error">{{ form_errors(edit_form.file) }}</div>
+{% endif %}
 
-                        {{ form_widget(edit_form.titulo, {'attr': {'class': 'nota-titulo ui-corner-all', 'style': 'width:300px;'} }) }}
-                    </div>
+{{ form_widget(edit_form.file) }}
+{% endif %}
 
-                    <div class="row">
-                        <span style="font-size: small">Etiquetas:</span>
-
-
-                        <ul id="nota_etiquetas">
-                        {%for etiqueta in nota_seleccionada.etiquetas %}
-                                <li>{{ etiqueta.texto }}</li>
-                        {% endfor %}
-                            </ul>
-                        </div>
-
-                        <div class="row">
-                    {% if form_errors(edit_form.texto) %}
-                                <div class="ui-state-error">{{ form_errors(edit_form.texto) }}</div>
-                    {% endif %}
-                    {{ form_widget(edit_form.texto) }}
-
-                            </div>
-
-                            <div class="row">
-                                <div>
-                                    <div style="font-size: small">Fichero:</div>
-
-                    {% if nota_seleccionada.path  %}
-                    {% set urlFile = asset( nota_seleccionada.webPath(app.user.getUsername) ) %}
-                                    <a href="{{ urlFile }}">{{ nota_seleccionada.path}}</a>
-                    {% endif %}
-                                </div>
-                            </div>
-
-                    {% if is_granted('ROLE_PREMIUM') %}
-                            <div class="row">
-                                <div style="font-size: small">Cambiar Fichero:</div>
-                    {% if form_errors(edit_form.file) %}
-                                <div class="ui-state-error">{{ form_errors(edit_form.file) }}</div>
-                    {% endif %}
-                    {{ form_widget(edit_form.file) }}
-                    {% endif %}
-                            </div>
-
-                {{ form_widget(edit_form._token) }}
-
-                        </form>
-                    </div>
-                </div>
-            </div>
+{{ form_widget(edit_form._token) }}
+</form>

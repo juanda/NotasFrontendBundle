@@ -1,77 +1,82 @@
 {% extends 'JAMNotasFrontendBundle:Notas:layout-etiquetas-notas.html.twig' %}
 
+{% block javascripts %}
+
+{{ parent() }}
+
+<script>
+var btnCreate = $("#btn_crear");
+var btnEdit = $("#btn_editar");
+var btnDelete= $("#btn_borrar");
+
+btnCreate.click(function(){
+     window.location = '{{ path('jamn_nueva')}}';
+});
+
+{% if nota_seleccionada %}
+btnEdit.click(function(){
+     window.location = '{{ path('jamn_editar', {'id': nota_seleccionada.id }) }}';
+});
+
+btnDelete.click(function(){
+    $("#form_borrar").submit();
+});
+
+{% endif %}
+</script>
+
+{% endblock %}
+
+
   {% block detalle_y_edicion %}
-
-<div class="span6">
-    <div class="well sidebar-nav">
-        <ul class="nav nav-list">
-            <li class="nav-header">Detalle Nota</li>  
-        </ul>
-        {% if nota_seleccionada %}
-
-    <div id="confirma-borrado"></div>
+            
+            {% if nota_seleccionada %}
+            
+                <div id="confirma-borrado"></div>      
 
     <div class="ui-widget my-widget">
         <div class="ui-widget-content my-widget-content">
-            <span class="my-buttonset-left">
-                <a id="btn_crear" href="{{ path('jamn_nueva')}}">crear</a>
-            </span>
-
-            <span class="my-buttonset-right">
-                <a id="btn_editar" href="{{ path('jamn_editar', {'id': nota_seleccionada.id }) }}">editar</a>
-                <button id="btn_borrar" type="submit">Borrar</button>
+            
+                <button id="btn_crear" class="btn btn-primary" href="{{ path('jamn_nueva')}}"><i class="icon-plus"></i> crear</button>                     
+                <button id="btn_editar" class="btn btn-primary" href="{{ path('jamn_editar', {'id': nota_seleccionada.id }) }}"><i class="icon-pencil"></i> editar</button>
+                <button id="btn_borrar" class="btn btn-danger" type="submit"><i class="icon-remove"></i> borrar</button>
                 <form id="form_borrar" action="{{ path('jamn_borrar', { 'id': nota_seleccionada.id }) }}" method="post">
-                {{ form_widget(delete_form) }}
+                  {{ form_widget(delete_form) }}
                     </form>
-                </span>
-            </div>
-        </div>
+                <li>
+        {% for etiqueta in nota_seleccionada.etiquetas %}
+                <span class="label label-success">{{ etiqueta.texto }}</span>
+        {% endfor %}
+                </li>
 
-        <div class="separador"></div>
+                <li>
+                    <h5>{{ nota_seleccionada.titulo }} <i>({{ nota_seleccionada.fecha.date }})</i> </h5> 
+                </li>
+                
+        {% if nota_seleccionada.path %}
+                <div class="nota-detalle-adjunto">
+                    <span class="ui-icon ui-icon-disk" style="float: left;"></span>
+          {% set urlFile = asset( nota_seleccionada.webPath(app.user.getUsername) ) %}
+                    <a href="{{ urlFile }}">{{ nota_seleccionada.path}}</a>
+                </div>                    
+        {% endif %}                                        
+              
+                
+                <li>
+                <div class="bs-docs-container">
+                    <p>
+        {{ nota_seleccionada.texto|raw }}
+                        </p>
+                </div>
+                </li>
 
-        <div class="ui-layout-content ui-widget-content">
-            <div class="ui-widget-content my-widget-content">
-                <div id="nota-detalle">
+        {% else %}
 
-                    <div class="nota-detalle-titulo">
-                        {{ nota_seleccionada.titulo }}
-                        </div>
-
-                    {% if nota_seleccionada.path %}
-                        <div class="nota-detalle-adjunto">
-                            <span class="ui-icon ui-icon-disk" style="float: left;"></span>
-                    {% set urlFile = asset( nota_seleccionada.webPath(app.user.getUsername) ) %}
-                            <a href="{{ urlFile }}">{{ nota_seleccionada.path}}</a>
-                        </div>                    
-                    {% endif %}                                        
-
-                        <div class="nota-detalle-etiquetas">
-                        {% for etiqueta in nota_seleccionada.etiquetas %}
-                                <span class="nota-detalle-etiqueta ui-corner-all">{{ etiqueta.texto }}</span>
-                        {% endfor %}
-
-                            </div>
-                            <div class="nota-detalle-content">
-                        {{ nota_seleccionada.texto|raw }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-    {% else %}
-                    <div class="ui-widget my-widget">
-                        <div class="ui-widget-content my-widget-content">
-                            <span class="my-buttonset-left">
-                                <a id="btn_crear" href="{{ path('jamn_nueva')}}">crear</a>
-                            </span>
-                        </div>
-                    </div>
-    {% endif %}
-    </div>
-</div>
+                    <span class="my-buttonset-left">
+                        <a id="btn_crear" href="{{ path('jamn_nueva')}}">crear</a>
+                    </span>
 
 
-
-    
-
+        {% endif %}
 
   {% endblock %}
