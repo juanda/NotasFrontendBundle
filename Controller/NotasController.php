@@ -84,7 +84,10 @@ class NotasController extends Controller {
                 $em->persist($nota);
 
                 $em->flush();
-
+                
+                $session = $this->get('session');
+                $session->set('nota.seleccionada.id', $request->get('id'));
+                                
                 return $this->redirect($this->generateUrl('jamn_homepage'));
             }
         }
@@ -93,7 +96,7 @@ class NotasController extends Controller {
                     'etiquetas' => $etiquetas,
                     'notas' => $notas,
                     'nota_seleccionada' => $nota,
-                    'new_form' => $newForm->createView(),                    
+                    'form' => $newForm->createView(),                    
                     'edita' => false,
                 ));
     }
@@ -141,7 +144,7 @@ class NotasController extends Controller {
                     'etiquetas' => $etiquetas,
                     'notas' => $notas,
                     'nota_seleccionada' => $nota,
-                    'edit_form' => $editForm->createView(),
+                    'form' => $editForm->createView(),
                     'delete_form' => $deleteForm->createView(),
                     'edita' => true,
                 ));
