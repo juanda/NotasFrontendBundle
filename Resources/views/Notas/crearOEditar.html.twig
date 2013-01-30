@@ -97,14 +97,12 @@
     {{ form_widget(form.texto) }}
 
     {% if nota_seleccionada.path  %}
-       <label>Fichero:</label>
-       {% set urlFile = asset( nota_seleccionada.webPath(app.user.getUsername) ) %}
-       <a href="{{ urlFile }}">{{ nota_seleccionada.path}}</a>
+    {% set urlFile = asset( nota_seleccionada.webPath(app.user.getUsername) ) %}
+         <a href="{{ urlFile }}"><i class="icon-file"></i>{{ nota_seleccionada.path}}</a>
     {% endif %}
     
     {% if is_granted('ROLE_PREMIUM') %}
-       <label>Fichero:</label>
-
+       <label>Cambiar:</label>
        {% if form_errors(form.file) %}
           {{ form_errors(form.file) }}
        {% endif %}

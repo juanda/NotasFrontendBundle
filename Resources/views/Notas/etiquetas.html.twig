@@ -7,9 +7,13 @@
                 <a href="{{ path("jamn_conetiqueta", {"etiqueta": 'todas'}) }}"> todas las notas</a>
             </li>
             {% for etiqueta in etiquetas %}
-            <li class="">                
-                <a href="{{ path("jamn_conetiqueta", {"etiqueta": etiqueta.id}) }}"><i class="icon-tag"></i>{{ etiqueta.texto }}</a>
-            </li>
+                        
+            <a href="{{ path("jamn_conetiqueta", {"etiqueta": etiqueta.id}) }}">
+                <span class="label label-info">
+                   {{ etiqueta.texto }} ({{etiqueta.numeroDeNotas}})
+                </span>
+            </a>
+         
             {% endfor%}
                         
         </ul>

@@ -20,8 +20,8 @@
             <li class="{{ nota.selected? 'active' :   '' }}">                
               <a href="{{ path('jamn_nota',{"id": nota.id}) }}">
                  <h6>{{ nota.titulo }}, <em>{{ nota.fecha.date }}</em></h6>
-                 <small> {{ nota.texto | length < 80 ? nota.texto : nota.texto|raw|slice(0,80) ~ '...' }}</small>
-             </a>
+                 <small>{{ nota.texto|slice(0,80)|raw }} {{ nota.texto | length < 80 ? '' : '...' }}</small>
+              </a>
            </li>
            <li class="divider"></li>                                   
             {% else %}                

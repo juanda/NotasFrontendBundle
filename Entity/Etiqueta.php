@@ -129,4 +129,9 @@ class Etiqueta
     {
         $this->notas->removeElement($notas);
     }
+    
+    public function getNumeroDeNotas(){
+        
+        return count($this->getNotas());
+    }
 }
